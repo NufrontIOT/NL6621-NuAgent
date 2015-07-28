@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:stretchColumns="1"
+        android:layout_margin="10dip" >
+
+        <TableRow>
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="@string/ssid"
+                android:textStyle="bold" />
+            
+            <EditText
+                android:id="@+id/ssid"
+                android:padding="3dip"
+                android:scrollHorizontally="true" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="@string/password"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/password"
+                android:padding="3dip"
+                android:password="false"
+                android:scrollHorizontally="true" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"           
+            android:text="@string/ok" 
+            android:layout_margin="30dip"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"            
+            android:text="@string/cancel" 
+            android:layout_margin="30dip"
+            android:layout_weight="1"/>
+    </LinearLayout>
+		<Button 
+		    android:id="@+id/refresh_bn"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/refresh_bn"
+		    />
+			
+</LinearLayout>

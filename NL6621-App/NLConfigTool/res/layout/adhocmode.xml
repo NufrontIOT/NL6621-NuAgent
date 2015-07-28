@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="fill_vertical"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/note2" />
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="272dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/search" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="108dp"
+        android:layout_margin="10dip"
+        android:stretchColumns="1" >
+
+        <TableRow>
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="@string/ssid"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/ssid"
+                android:padding="3dip"
+                android:scrollHorizontally="true" 
+                android:layout_weight="1"
+                android:layout_width="3dp"
+                android:singleLine="true"/>
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="@string/password"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/password"
+                android:padding="3dip"
+                android:password="true"
+                android:scrollHorizontally="true" 
+                android:layout_weight="1"
+                android:layout_width="3dp"
+                android:singleLine="true"/>
+
+            <CheckBox
+                android:id="@+id/dispaly_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/display_password" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dip"
+            android:layout_weight="1"
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dip"
+            android:layout_weight="1"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>

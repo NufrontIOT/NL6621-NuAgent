@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NLConfigTool</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    
+    <string name="ssid">WIFI名称</string>
+	<string name="password">WIFI密码</string>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
+	
+	<string name="alert_dialog_cancel">取消</string>
+    <string name="alert_dialog_ok">确定</string>
+    <string name="this_return">返回</string>
+    <string name="alert_dialog_text">确定要退出%1$s么？</string>
+    <string name="toast_nocheck_text">没有选中的操作对象</string>
+    <string name="warning">警告</string>
+    <string name="wifi_not_open">WIFI没有开启，请确认是否已经开启或连接？</string>
+    <string name="device_isconnected">设备已连上wifi</string>
+     <string name="select_utf">中文使用UTF-8编码</string>
+     <string name="easymode">直连模式添加</string>
+     <string name="adhocmode">热点模式添加</string>
+     <string name="display_password">密码可见</string>
+     <string name="search">搜索本地WIFI</string>
+     <string name="wifi_info">WIFI网络</string>
+</resources>
