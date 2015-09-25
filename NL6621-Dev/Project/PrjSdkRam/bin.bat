@@ -1,5 +1,5 @@
-d:\Keil\ARM\BIN40\fromelf.exe --bin -o OUTPUT\SdkFw.bin OUTPUT\OBJ\SdkFw.axf
-d:\Keil\ARM\BIN40\fromelf.exe -c -s -o OUTPUT\SdkFw.lst OUTPUT\OBJ\SdkFw.axf
+c:\Keil\ARM\BIN40\fromelf.exe --bin -o OUTPUT\SdkFw.bin OUTPUT\OBJ\SdkFw.axf
+c:\Keil\ARM\BIN40\fromelf.exe -c -s -o OUTPUT\SdkFw.lst OUTPUT\OBJ\SdkFw.axf
 copy OUTPUT\LIST\SdkFw.map OUTPUT\SdkFw.map /B/Y
 
 copy ..\..\Tool\GenBootBins.exe OUTPUT\GenBootBins.exe

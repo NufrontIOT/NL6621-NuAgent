@@ -81,7 +81,7 @@
  * one included in your C library
  */
 #ifndef MEMCPY
-#define MEMCPY(dst,src,len)             memcpy(dst,src,len)
+#define MEMCPY(dst,src,len)             memcpy((INT8U *)dst,(INT8U *)src,len)
 #endif
 
 /**
@@ -89,7 +89,7 @@
  * call to memcpy() if the length is known at compile time and is small.
  */
 #ifndef SMEMCPY
-#define SMEMCPY(dst,src,len)            memcpy(dst,src,len)
+#define SMEMCPY(dst,src,len)            memcpy((INT8U *)dst,(INT8U *)src,len)
 #endif
 /*
    ------------------------------------

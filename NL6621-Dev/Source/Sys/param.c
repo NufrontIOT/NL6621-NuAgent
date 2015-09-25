@@ -290,6 +290,10 @@ INT32 InfKeySet(UINT8 Index, UINT8 *KeyBuf, UINT8 KeyLen)
 	SysParam.WiFiCfg.KeyIndex = Index;
 	SysParam.WiFiCfg.KeyLength = KeyLen;
 	NST_MOVE_MEM(SysParam.WiFiCfg.PSK, KeyBuf, KeyLen);
+
+	if (KeyLen < 64)
+		SysParam.WiFiCfg.PSK[KeyLen] = 0;
+	
 	return 0;
 }
 
@@ -638,6 +642,7 @@ INT32 InfTxPwrLevelSet(PARAM_TX_PWR_LEVEL TxPwrLevel)
 		0 - disable
 		1 - legacy ps mode, send ps-poll frame to ap for buffered data
 		2 - fast ps mode, switch to active mode dynamically when there is data to send or receive
+		3 - soft ps mode, mcu keep running, open/close radio power dynamically.
 		
 	Return Value:
 		0 - success
@@ -648,7 +653,7 @@ INT32 InfTxPwrLevelSet(PARAM_TX_PWR_LEVEL TxPwrLevel)
 -------------------------------------------------------------------------*/
 INT32 InfPowerSaveSet(UINT8 PowerSaveMode)
 {	
-	if (PowerSaveMode > PS_MODE_FAST)
+	if (PowerSaveMode > PS_MODE_SOFT)
 	    return -1;
 
 	PostTaskMsg(gpMacMngTskMsgQ, MLME_PS_MODE_SET_ID, (PUINT8)&PowerSaveMode, 1);
@@ -687,7 +692,7 @@ INT32 InfDeepSleepSet(UINT32 WakeUpMode)
 		get rssi of peer terminal
 		
 	Arguments:
-		pMacAddr - Mac address
+		pMacAddr - Mac address, if set null, the rssi of associated ap will be returned in sta mode
 		
 	Return Value:
 		0 - failure
@@ -696,10 +701,7 @@ INT32 InfDeepSleepSet(UINT32 WakeUpMode)
 -------------------------------------------------------------------------*/
 INT8 InfPeerRssiGet(UINT8 pMacAddr[6] )
 {	
-    if (pMacAddr == NULL)
-        return 0;
-    else
-        return MlmeGetRssi(pMacAddr);	  
+    return MlmeGetRssi(pMacAddr);	  
 }
 
 /*   InfCurChGet   */
@@ -811,6 +813,8 @@ INT32 InfListenIntervalSet(UINT8 ListenIntv, BOOL_T ListenDtim)
         	TryPeerNum - max number of peer ap, we try to listen to
         				0 - no restrictiion
         				other - the max number of ap
+
+        	pCustomStr - custom string buffer(maximum 10 ascii characters), could be NULL if no custom data to receive
         	
 	Return Value:
 		0 - success
@@ -824,14 +828,16 @@ INT32 InfListenIntervalSet(UINT8 ListenIntv, BOOL_T ListenDtim)
 		
 		When the process succeeds, the ssid and key data will be filled in SysParam.WiFiCfg
 -------------------------------------------------------------------------*/
-INT32 InfDirectCfgStart(INT8 MinRssiFilter, UINT8 TryPeerNum)
+INT32 InfDirectCfgStart(INT8 MinRssiFilter, UINT8 TryPeerNum, UINT8 *pCustomStr)
 {
-	INT8U MsgBody[2] = {0};
+	INT8U MsgBody[6] = {0};
 
 	MsgBody[0] = MinRssiFilter;
 	MsgBody[1] = (INT8U)TryPeerNum;
+	if (pCustomStr)
+		NST_MOVE_MEM((INT8U *)(&MsgBody[2]), &pCustomStr, 4);
 
-	PostTaskMsg(gpMacMngTskMsgQ, MLME_DIRECT_CFG_ID, (PUINT8)MsgBody, 2);
+	PostTaskMsg(gpMacMngTskMsgQ, MLME_DIRECT_CFG_ID, (PUINT8)MsgBody, 6);
 	return 0;
 }
 
@@ -1040,5 +1046,24 @@ INT32 InfVendorIESet(UINT8 * pIePtr, UINT8 IeLen)
 
 	PostTaskMsg(gpMacMngTskMsgQ, MLME_VENDOR_IE_SET_ID, (PUINT8)(MsgBody), 5);
 	return 0;
+}
+
+/*   InfSysTimeGet   */
+/*-------------------------------------------------------------------------
+	Description:	
+		interface to get system launch time
+		
+	Arguments:
+        	
+	Return Value:
+		UINT64	system launch time in millisecond
+		
+	Note: 
+	The memory of ie buffer should not be free until call this function again with pIePtr equal NULL
+-------------------------------------------------------------------------*/
+UINT64 InfSysTimeGet(VOID)
+{
+	LARGE_INTEGER Ticks = BSP_GetLaunchTicks();
+	return ((Ticks.QuadPart)/1024*125) + ((Ticks.QuadPart)%1024*125/1024);
 }
 

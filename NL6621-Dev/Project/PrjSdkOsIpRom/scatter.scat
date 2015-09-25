@@ -74,9 +74,9 @@ LOAD_REGION_0 0x0002000 0x0000E000  {    ; load region size_region
 }
 
 ; 0x10100-0x40000 for download SRAM FW(including 32KB for customer), interrupt vector locate in 0x10100
-LOAD_REGION_1 0x00010100 0x0004FF00  {    ; load region size_region
+LOAD_REGION_1 0x00011000 0x0004FF00  {    ; load region size_region
     
-    fwCodeSRAM   0x00010100 0x0004FF00  {  ; load address = execution address
+    fwCodeSRAM   0x00011000 0x0004FF00  {  ; load address = execution address
         *.o (RESET, +First)    ; interrupt vector table, do not change it
         *(InRoot$$Sections)
         .ANY (+RO)

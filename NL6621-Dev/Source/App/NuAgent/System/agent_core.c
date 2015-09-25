@@ -240,7 +240,7 @@ void TcpServerThread(void *arg)
  */
 void TcpCloudThread(void *arg)
 {
-	int ret;   
+//	int ret;   
  
     while (1) {
 #if 0
@@ -250,6 +250,7 @@ void TcpCloudThread(void *arg)
 #endif
 			OSTimeDly(50);
 
+#if 0
 		while (1) {
 	        ret = Socket_CreateTCPClient();
 			if (ret < 0) {
@@ -263,7 +264,8 @@ void TcpCloudThread(void *arg)
 
 		Agent_cloud_process();
 		while(1) 
-			OSTimeDly(10);		 
+			OSTimeDly(10);	
+#endif	 
     }
 }		/* -----  end of function TcpCloudThread  ----- */
 

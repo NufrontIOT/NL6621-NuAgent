@@ -377,7 +377,7 @@
             <IncludeLibsPath></IncludeLibsPath>
             <Misc>--keep os_*.o --keep netdb.o(.text) --keep netdb.o(.data) --feedback link.fed</Misc>
             <LinkerInputFile></LinkerInputFile>
-            <DisabledWarnings></DisabledWarnings>
+            <DisabledWarnings>6314</DisabledWarnings>
           </LDads>
         </TargetArmAds>
       </TargetOption>

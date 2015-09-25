@@ -219,7 +219,7 @@ int StartDirectConfigConn(void)
     /* start direct config */
     log_info("Start directconfig...\n");
 	DirectCfgFlag = 0;
-    InfDirectCfgStart(0, 0);
+    InfDirectCfgStart(0, 0,NULL);
 
     /* print steps */
     while (1) 

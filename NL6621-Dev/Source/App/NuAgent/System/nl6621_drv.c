@@ -40,22 +40,86 @@ VOID ReadFlash(UINT8* pBuf, UINT32 DataLen, UINT32 ReadStartPos)
  *  Description:  write data to nor flash 
  * =====================================================================================
  */
-VOID WriteFlash(UINT8* pData, UINT32 DataLen, UINT32 BurnStartPos)
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  writeFlash
+ *  Description:  write data to nor flash 
+ * =====================================================================================
+ */
+static VOID WriteFlash(UINT8* pData, UINT32 DataLen, UINT32 BurnStartPos)
 {
-	UINT32 j;
-    UINT32 WriteAddr = BurnStartPos;
-    UINT32 PageCnt;
-    
-    PageCnt = DataLen / FLASH_SECTOR_SIZE + ((DataLen % FLASH_SECTOR_SIZE) > 0 ? 1 : 0);
-    
-    for (j = 0; j < PageCnt; j++) {
-        QSpiFlashEraseSector(WriteAddr);
-		OSTimeDly(1); 
-        QSpiWriteOneSector(WriteAddr, pData);
-        pData += FLASH_SECTOR_SIZE;
-        WriteAddr += FLASH_SECTOR_SIZE;
-    }
+	UINT8  sector_num;	//扇区地址   GD25q41 0~127
+	UINT16 sector_off;	//在扇区内的偏移
+	UINT16 secre_main;	//扇区剩余空间大小   
+ 	UINT16 i;    
+	UINT32 WriteAddr = BurnStartPos;	
+    UINT8  *flash_buf = NULL; //flash缓冲区
+	UINT32 Temporary_var = 0;//临时变量，防止优化
+
+
+	sector_num = WriteAddr/FLASH_SECTOR_SIZE;
+	sector_off = WriteAddr%FLASH_SECTOR_SIZE;
+	secre_main = FLASH_SECTOR_SIZE-sector_off;  
+	
+	flash_buf = OSMMalloc(FLASH_SECTOR_SIZE); 
+
+	if(flash_buf == NULL)
+	{
+	   printf("flash_buf malloc fail!\r\n");
+	}
+
+	if(DataLen <= secre_main){
+		  secre_main = DataLen;//不大于一个扇区字节数
+	}
+
+	do
+	{	
+		Temporary_var =  sector_num*FLASH_SECTOR_SIZE;
+		QSpiFlashRead(Temporary_var, flash_buf, FLASH_SECTOR_SIZE);//读出整个扇区的内容
+		for(i=0; i<secre_main; i++){
+		    Temporary_var = sector_off+i;
+			if(flash_buf[Temporary_var] != 0XFF)  break;//需要擦除  	  
+		}
+		if(i < secre_main){
+			Temporary_var = sector_num*FLASH_SECTOR_SIZE;
+			QSpiFlashEraseSector(Temporary_var);//擦除这个扇区
+			//OSTimeDly(2);
+		    NSTusecDelay(100000); //延时
+
+			for(i=0; i<secre_main; i++){
+			    Temporary_var = sector_off+i;
+				flash_buf[Temporary_var] = pData[i];	  
+			}
+		    Temporary_var = sector_num*FLASH_SECTOR_SIZE;
+			if(QSpiWriteAny(Temporary_var, flash_buf, FLASH_SECTOR_SIZE) != 0)
+			   break;//写入整个扇区  
+		}
+		else{
+	    	if(QSpiWriteAny(WriteAddr, pData, secre_main) != 0)//写已经擦除了的,直接写入扇区剩余区间. 
+	           break;	
+		} 
+					   
+		if(DataLen == secre_main){
+		   break;//写入结束了
+		}
+		else{//写入未结束
+			sector_num++;//扇区地址增1
+			sector_off = 0;//偏移位置为0 	 
+
+		   	pData +=   secre_main;  //指针偏移
+			WriteAddr += secre_main;  //写地址偏移	   	   
+		   	DataLen -=   secre_main;  //字节数递减
+			if(DataLen > FLASH_SECTOR_SIZE) 
+			    secre_main = FLASH_SECTOR_SIZE;	//下一个扇区还是写不完
+			else 
+			    secre_main = DataLen;			//下一个扇区可以写完了
+		}	 
+	}while(1); 
+	
+	OSMFree(flash_buf); 	
 }
+
 
 #define AGENT_CONFIG_DATA_ADDR      (0x64000)  /* about 400k Bytes offset */
 //#define AGENT_CONFIG_DATA_ADDR      (0x68000)  /* about 416k Bytes offset */

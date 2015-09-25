@@ -83,9 +83,10 @@ VOID SpiFlashEraseSector(UINT32 SectorAddr);
 
 VOID QSpiFlashRead(UINT32 ReadStartPos, UINT8* pBuf, UINT32 Len); 
 VOID QSpiFlashEraseChip(VOID);
-VOID QSpiFlashWriteOnePage(UINT32 Adr, UINT8* pBuf);
+VOID QSpiFlashWriteOnePage(UINT32 Adr, UINT8* pBuf, UINT16 DataLen); 
 VOID QSpiFlashEraseSector(UINT32 SectorAddr);
 INT32 QSpiWriteOneSector(UINT32 SectorAddr, UINT8* pBuf);
+INT32 QSpiWriteAny(UINT32 WriteAddr, UINT8* pData, UINT16 DataLen);   
 
 #endif
 

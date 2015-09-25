@@ -19,6 +19,7 @@ extern "C" {
 #define AIRKISS_ENABLE_CRYPT 1
 #endif
 
+
 typedef void* (*airkiss_memset_fn) (void* ptr, int value, unsigned int num);
 typedef void* (*airkiss_memcpy_fn) (void* dst, const void* src, unsigned int num);
 typedef int (*airkiss_memcmp_fn) (const void* ptr1, const void* ptr2, unsigned int num);
@@ -48,6 +49,7 @@ typedef struct
  */
 typedef struct
 {
+	int dummyap[26];
 	int dummy[32];
 } airkiss_context_t;
 
@@ -142,6 +144,90 @@ int airkiss_recv(airkiss_context_t* context, const void* frame, unsigned short l
  * 		  0：成功
  */
 int airkiss_get_result(airkiss_context_t* context, airkiss_result_t* result);
+
+
+/*
+ * 上层切换信道以后，可以调用一下本接口清缓存，降低锁定错信道的概率，注意调用的逻辑是在airkiss_init之后
+ *
+ * 返回值
+ * 		< 0：出错，通常是参数错误
+ * 		  0：成功
+ */
+int airkiss_change_channel(airkiss_context_t* context);
+
+/*
+ *
+ * 以上是实现智能配置网络的相关API，以下是微信内网发现相关API
+ *
+ */
+
+/*
+ * airkiss_lan_recv()的返回值
+ */
+typedef enum
+{
+	/* 提供的数据缓冲区长度不足 */
+	AIRKISS_LAN_ERR_OVERFLOW = -5,
+
+	/* 当前版本不支持的指令类型 */
+	AIRKISS_LAN_ERR_CMD = -4,
+
+	/* 打包数据出错 */
+	AIRKISS_LAN_ERR_PAKE = -3,
+
+	/* 函数传递参数出错 */
+	AIRKISS_LAN_ERR_PARA = -2,
+
+	/* 报文数据错误 */
+	AIRKISS_LAN_ERR_PKG = -1,
+
+	/* 报文格式正确，但是不需要设备处理的数据包 */
+	AIRKISS_LAN_CONTINUE = 0,
+
+	/* 接收到发现设备请求数据包 */
+	AIRKISS_LAN_SSDP_REQ = 1,
+
+	/* 数据包打包完成 */
+	AIRKISS_LAN_PAKE_READY = 2
+
+
+} airkiss_lan_ret_t;
+
+
+typedef enum
+{
+	AIRKISS_LAN_SSDP_REQ_CMD = 0x1,
+	AIRKISS_LAN_SSDP_RESP_CMD = 0x1001,
+	AIRKISS_LAN_SSDP_NOTIFY_CMD = 0x1002
+} airkiss_lan_cmdid_t;
+
+/*
+ * 设备进入内网发现模式后，将收到的包传给airkiss_lan_recv以进行解析
+ *
+ * 参数说明
+ * 		body：802.11 frame mac header(must contain at least first 24 bytes)
+ * 		length：total frame length
+ * 		config：AirKiss回调函数
+ *
+ * 返回值
+ * 		 < 0：出错，请参考airkiss_lan_ret_t，通常是报文数据出错
+ * 		>= 0：成功，请参考airkiss_lan_ret_t
+ */
+int airkiss_lan_recv(const void* body, unsigned short length, const airkiss_config_t* config);
+
+/*
+ * 设备要发送内网协议包时，调用本接口完成数据包打包
+ *
+ * 参数说明
+ * 		body：802.11 frame mac header(must contain at least first 24 bytes)
+ * 		length：total frame length
+ * 		config：AirKiss回调函数
+ *
+ * 返回值
+ * 		 < 0：出错，请参考airkiss_lan_ret_t，通常是报文数据出错
+ * 		>= 0：成功，请参考airkiss_lan_ret_t
+ */
+int airkiss_lan_pack(airkiss_lan_cmdid_t ak_lan_cmdid, void* appid, void* deviceid, void* _datain, unsigned short inlength, void* _dataout, unsigned short* outlength, const airkiss_config_t* config);
 
 #ifdef __cplusplus
 }

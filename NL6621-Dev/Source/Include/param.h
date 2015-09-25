@@ -163,7 +163,8 @@ typedef enum
 {
     PS_MODE_DISABLE = 0,
     PS_MODE_LEGACY,
-    PS_MODE_FAST
+    PS_MODE_FAST,
+    PS_MODE_SOFT
 } PWR_SAVE_MODE;
 
 typedef enum
@@ -244,7 +245,7 @@ INT32  InfBeaconPeriodSet(UINT16 BcnPrd, UINT8 NotifyPeerEn);
 
 INT32 InfListenIntervalSet(UINT8 ListenIntv, BOOL_T ListenDtim);
 
-INT32 InfDirectCfgStart(INT8 MinRssiFilter, UINT8 TryPeerNum);
+INT32 InfDirectCfgStart(INT8 MinRssiFilter, UINT8 TryPeerNum, UINT8 *pCustomStr);
 
 INT32 InfPeerAgeOutSet(INT32U Time);
 
@@ -265,6 +266,8 @@ INT32  InfStaWpsPinGet(UINT8 pWpsPin[9]);
 INT32  InfSnifferStart(MonRecvCallBack pFuncCb, UINT8 Bssid[6], UINT8 Channel);
 
 INT32 InfVendorIESet(UINT8 * pIePtr, UINT8 IeLen);
+
+UINT64 InfSysTimeGet(VOID);
 
 #endif//__PARAM_H__
 

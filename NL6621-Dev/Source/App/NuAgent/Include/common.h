@@ -67,14 +67,10 @@
 #include "lan.h"
 
 
-#if 0
+
 #define malloc 		OSMMalloc
-#define calloc 		OSMCalloc
-#define free 		OSMFree	
-#else
-#define malloc 		mem_malloc
-#define free 		mem_free
-#endif
+#define free 		OSMFree
+
 
 
 #define GAGENT_FEATURE_OTA 					(0)

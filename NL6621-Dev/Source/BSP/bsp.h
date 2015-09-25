@@ -39,7 +39,7 @@ VOID  BSP_Init(VOID);
 VOID BSP_WakeupCpuIntISR(VOID);
 VOID BSP_EfuseRead(UINT8 Offset, UINT8 Cnt, PUINT32 pEfuseInfo);
 VOID BSP_ChipReset(VOID);
-
+LARGE_INTEGER BSP_GetLaunchTicks(VOID);// get system launch ticks (1 tick time = 1/32.768KHz)
 
 #define NST_WR_PHY_REG(Offset, Value)   /*0x40002000*/\
     {\

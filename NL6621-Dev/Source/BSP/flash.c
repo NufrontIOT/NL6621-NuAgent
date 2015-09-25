@@ -127,7 +127,6 @@ VOID  SpiFlashRead(UINT32 ReadStartPos, UINT8* pBuf, UINT32 Len)
    //     DBGPRINT(DEBUG_INFO, "READ FLASH pBuf=0x%x\n", pBuf);
         //    NSTusecDelay(1000);
     }
-
 }
 
 /*
@@ -274,7 +273,7 @@ VOID SpiFlashEraseSector(UINT32 SectorAddr)
 
     BSP_SpiWait(); 
 
-    SpiFlashWaitBusy(); 
+    SpiFlashWaitBusy();
 }
 #endif
 //#endif
@@ -339,6 +338,7 @@ VOID  QSpiFlashRead(UINT32 ReadStartPos, UINT8* pBuf, UINT32 Len)
    //     DBGPRINT(DEBUG_INFO, "READ FLASH pBuf=0x%x\n", pBuf);
         //	NSTusecDelay(1000);
     }
+	NST_QSPI->SSIENR= 0x00;
 
 }
 
@@ -454,6 +454,7 @@ VOID QSPI_FlashWriteEnable(VOID)
     NST_QSPI->DR = FLASH_CMD_WREN;
 
     BSP_QSpiWait(); 
+
 }
 #endif
 
@@ -496,6 +497,7 @@ VOID QSpiFlashEraseChip(VOID)
 
     QSpiFlashWaitBusy();    				   //等待芯片擦除结束
   //  printf("QSpiFlashWaitBusy finish!\n");
+      NST_QSPI->SSIENR= 0x00;
 }   
 
 
@@ -511,7 +513,7 @@ VOID QSpiFlashEraseChip(VOID)
 **
 ******************************************************************************
 */
-VOID QSpiFlashWriteOnePage(UINT32 Adr, UINT8* pBuf) 
+VOID QSpiFlashWriteOnePage(UINT32 Adr, UINT8* pBuf, UINT16 DataLen) 
 {
     UINT32 i;
     UINT32 FlashAdr;
@@ -542,9 +544,9 @@ VOID QSpiFlashWriteOnePage(UINT32 Adr, UINT8* pBuf)
     BSP_QSpiWriteByte(FlashAdr & 0xFF);
 
     // send data
-    for (i = 0; i <FLASH_PAGE_SIZE; i++)
+    for (i = 0; i <DataLen; i++)
     {
-        while(!(NST_QSPI->SR & QSPI_SR_TF_NOT_FULL));
+        while(!(NST_QSPI->SR & QSPI_SR_TF_EMPT));
         
         NST_QSPI->DR = pBuf[i];
     }
@@ -552,6 +554,8 @@ VOID QSpiFlashWriteOnePage(UINT32 Adr, UINT8* pBuf)
     BSP_QSpiWait(); 
 
     QSpiFlashWaitBusy(); 
+
+	NST_QSPI->SSIENR= 0x00;
 }
 
 #ifndef AT45DB041D
@@ -574,6 +578,8 @@ VOID QSpiFlashEraseSector(UINT32 SectorAddr)
     BSP_QSpiWait(); 
 
     QSpiFlashWaitBusy(); 
+	NST_QSPI->SSIENR= 0x00;
+
 }
 #endif
 
@@ -591,13 +597,11 @@ INT32 QSpiWriteOneSector(UINT32 SectorAddr, UINT8* pBuf)
 
     NSTusecDelay(100000);
 
-    for (i = 0; i < PageCnt; i++)
-    {
+    for (i = 0; i < PageCnt; i++){
         j = 10;
-
         while (j--)
         {
-            QSpiFlashWriteOnePage(WriteAddr, pBuf);
+            QSpiFlashWriteOnePage(WriteAddr, pBuf, FLASH_PAGE_SIZE);
             NSTusecDelay(1000);
             QSpiFlashRead(WriteAddr, PageBuf, FLASH_PAGE_SIZE);
             if (memcmp(PageBuf, pBuf, FLASH_PAGE_SIZE) == 0)
@@ -613,6 +617,46 @@ INT32 QSpiWriteOneSector(UINT32 SectorAddr, UINT8* pBuf)
 
     return 0;
 }
+
+//确保写的地址区域之间是否擦除了。
+INT32 QSpiWriteAny(UINT32 WriteAddr, UINT8* pData, UINT16 DataLen)   
+{ 			 		 
+	UINT16 pageremain,j;	 
+	  
+
+	pageremain = FLASH_PAGE_SIZE-WriteAddr%FLASH_PAGE_SIZE; //单页剩余的字节数
+			 	    
+	if(DataLen <= pageremain)
+	   pageremain = DataLen;  //不大于256个字节
+
+	do{	
+	    j = 10;
+        while (j--)
+        {    
+			QSpiFlashWriteOnePage(WriteAddr, pData, pageremain);
+	        NSTusecDelay(1000);
+	        QSpiFlashRead(WriteAddr, PageBuf, pageremain);
+	        if (memcmp(PageBuf, pData, pageremain) == 0)
+	             break;
+        }
+        if (j == 0)
+            return -1;
+
+		if(DataLen == pageremain)
+		    break;//写入结束了
+	 	else {
+			pData     += pageremain;
+			WriteAddr += pageremain;	
+
+			DataLen   -= pageremain;//减去已经写入了的字节数
+			if(DataLen > FLASH_PAGE_SIZE)
+			   pageremain = FLASH_PAGE_SIZE; //一次可以写入256个字节
+			else 
+			   pageremain = DataLen; 	  //不够256个字节了
+		}
+	}while(1);	  
+	return 0;  
+} 
 
 #endif // NULINK2_SOC
 
