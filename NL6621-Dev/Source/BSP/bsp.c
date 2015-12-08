@@ -316,6 +316,8 @@ VOID  BSP_Init (VOID)
 #ifdef DMA_MOVE_MEM
     BSP_DmaMoveMemInit(DMA_CHANNEL_1); // init DMA CH 1 for memory move
 #endif // DMA_MOVE_MEM //
+
+   uart_init();
 }
 
 

@@ -372,7 +372,7 @@
             <useFile>0</useFile>
             <TextAddressRange>0x08000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
-            <ScatterFile>.\scatter_loader.scat</ScatterFile>
+            <ScatterFile>.\scatter_jtag.scat</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -886,6 +886,11 @@
               <FilePath>..\..\Source\App\NuAgent\Wifi\wifi_conn.c</FilePath>
             </File>
             <File>
+              <FileName>sniffer_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Wifi\sniffer_config.c</FilePath>
+            </File>
+            <File>
               <FileName>wifi_opt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\Wifi\wifi_opt.c</FilePath>
@@ -916,11 +921,6 @@
               <FilePath>..\..\Source\App\NuAgent\Lib\ring_buffer.c</FilePath>
             </File>
             <File>
-              <FileName>str_lib.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Lib\str_lib.c</FilePath>
-            </File>
-            <File>
               <FileName>nl6621_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\System\nl6621_uart.c</FilePath>
@@ -936,14 +936,24 @@
               <FilePath>..\..\Source\App\NuAgent\Device\simu_uart.c</FilePath>
             </File>
             <File>
+              <FileName>TestMain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Sample\TestMain.c</FilePath>
+            </File>
+            <File>
+              <FileName>str_lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Lib\str_lib.c</FilePath>
+            </File>
+            <File>
               <FileName>cJSON.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\Lib\cJSON.c</FilePath>
             </File>
             <File>
-              <FileName>TestMain.c</FileName>
+              <FileName>log.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Sample\TestMain.c</FilePath>
+              <FilePath>..\..\Source\App\NuAgent\User\log.c</FilePath>
             </File>
           </Files>
         </Group>

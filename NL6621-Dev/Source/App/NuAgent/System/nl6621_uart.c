@@ -55,7 +55,14 @@ int uart_data_send(unsigned char *data, unsigned short len, unsigned char uart_t
 		else 
 			SimuSendOneByte(*(unsigned char *)(data + i));
 	}
-
+    if(uart_type == 0)   	//开启定时器1中断，发送数据
+	{
+	    i = *Tmr1Eoi;
+	    i = *TmrsEoi;
+		NVIC_EnableIRQ(TMR1_IRQn);
+		*Tmr1Load = SIMU_UART_Baudrate;
+		*Tmr1Ctl = (~TMR_INT_MASK) |TMR_ENA | TMR_USER_DEFINE_MODE;
+	}
 	return 0;
 }
 
@@ -153,10 +160,17 @@ void UartTaskThread(void *arg)
 #if 1
 			log_info("Get uart data(len:0x%x):\n", recv_size);
 		    for (i = 0; i < recv_size; i++) {
-		        if (((i % 8) == 0) && (i != 0)) 	printf("\n");
-		        log_info("0x%x\t", recv_data[i]);		
+		        if (((i % 8) == 0) && (i != 0)) 	log_info("\r\n");
+		        log_info("0x%x ", recv_data[i]);		
 		    }
-			log_info("\n\n");
+
+//			printf("Get uart data(len:0x%x):\n", recv_size);
+//		    for (i = 0; i < recv_size; i++) {
+//		        if (((i % 8) == 0) && (i != 0)) 	printf("\r\n");
+//		        printf("0x%x ", recv_data[i]);		
+//		    }
+//            recv_data[recv_size] = 0;
+//			log_info("%s\r\n",recv_data);
 #endif
 		}
 	}

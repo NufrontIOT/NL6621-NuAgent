@@ -23,8 +23,11 @@
 
 extern VOID BSP_LowMacIntISR(VOID);
 
+
+//模拟串口，发送和接收
 extern void gpio_int_func(int portNum);
 extern int simu_uart_timer_task(void);
+extern void SimuUartOutPut(void);
 
 /*******************************************************************************
 * Function Name  : NMIException
@@ -337,7 +340,7 @@ __irq void TMR1_IRQHandler(void)
     RegEoi = *TmrsEoi;
     RegEoi = RegEoi;
 
-	simu_uart_timer_task();
+    SimuUartOutPut();//模拟串口发送数据
 
 
    // 开中断
@@ -371,6 +374,7 @@ __irq void TMR0_IRQHandler(void)
     RegEoi = *TmrsEoi;
     RegEoi = RegEoi;
     
+  	simu_uart_timer_task();
 
    // 开中断
     NVIC_EnableIRQ(TMR0_IRQn);

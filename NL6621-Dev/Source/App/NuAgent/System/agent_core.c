@@ -46,7 +46,7 @@ void update_led_indicator(unsigned int low_time, unsigned int high_time)
  */
 void SysIdxLedThread(void *arg)
 {
-	log_info("Create system LED indicator task success.\n");
+	//log_notice("Create system LED indicator task success.\r\n");
 
 	/* initialize LED indicator gpio */
 	BSP_GPIOPinMux(USER_GPIO_IDX_LED);		    /* led indicator */
@@ -114,6 +114,7 @@ void SysResetThread(void *arg)
 	int i;
 	Agent_config_t  pConfigData;
 
+    log_notice("Create system reset task success.\r\n");
 	while (1) 
 	{
 		if (system_reset_flag == 0x12345678) 
@@ -180,6 +181,8 @@ void UdpServerThread(void *arg)
 {
 	int ret = 0;
 
+ 	log_notice("Create UDP Server task success.\r\n");
+
 	while (1) {
 	    /* Create UDP server socket */
 		while (1) {
@@ -209,6 +212,7 @@ void TcpServerThread(void *arg)
 {   
 	int ret = 0;
 
+   	log_notice("Create TCP Server task success.\n");
 	while (1) {
 
 		while (sys_status.status != SYS_STATUS_WIFI_STA_CONNECTED)
@@ -241,7 +245,8 @@ void TcpServerThread(void *arg)
 void TcpCloudThread(void *arg)
 {
 //	int ret;   
- 
+ 	log_notice("Create TCP Client Cloud task success.\n");
+	 
     while (1) {
 #if 0
 		while (sys_status.status != SYS_STATUS_WIFI_STA_CONNECTED)
@@ -282,7 +287,7 @@ void OtherTaskThread(void *arg)
 {
 	int count = 0; 
 	int ntp_ret = 0;
-	log_info("Create Other Task thread success.\n");
+	log_notice("Create Other Task thread success.\n");
 
 	while (1) 
 	{

@@ -3,6 +3,7 @@
 int DirectCfgFlag = 0;
 
 unsigned char wifi_sta_connect_ap_flag = 0;
+unsigned char link_status;
 
 extern Agent_config_t Agent_config_data;
 extern struct sys_status_t sys_status;			/* system status */
@@ -47,6 +48,7 @@ VOID AppEvtCallBack(SYS_EVT_ID event)
 		default:
 			break;
 	}
+	link_status =  event;
 }
 
 
@@ -322,7 +324,7 @@ void Agent_network_init(void)
 		log_info("Get GAgentConfig Data error.\n");
 	}
 
-	if ((Agent_config_data.flag & XPG_CFG_FLAG_CONNECTED) == XPG_CFG_FLAG_CONNECTED) {
+	if (Agent_config_data.flag  == XPG_CFG_FLAG_CONNECTED) {
         /* setup station mode */
 		sys_status.status = SYS_STATUS_WIFI_DIRECTCONFING;
 		

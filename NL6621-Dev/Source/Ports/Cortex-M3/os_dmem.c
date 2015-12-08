@@ -347,7 +347,9 @@ INT8U OS_FreeMem(VOID *memory)
 }
 
 
-static INT32U sysemPool[OS_DMEM_POOL_SIZE/4];  // maybe need relocated
+#pragma arm section zidata="only_dynamic_memory" /* 仅动态内存访问*/
+static INT32U sysemPool[OS_DMEM_POOL_SIZE/4]; // maybe need relocated
+#pragma arm section
 
 void OS_DMemInit(void)
 {

@@ -172,7 +172,7 @@ void Agent_SaveSSIDAndKey(char *pSSID, char *pKey)
     memcpy((unsigned char*)Agent_config_data.wifi_ssid, (unsigned char*)pSSID, 32);
     memcpy((unsigned char*)Agent_config_data.wifi_key, (unsigned char*)pKey, 32);
 	
-	Agent_config_data.flag |= XPG_CFG_FLAG_CONNECTED;
+	Agent_config_data.flag = XPG_CFG_FLAG_CONNECTED;
     nl6621_SaveConfigData(&Agent_config_data);	
       	
     log_info("Save agent config data successful.\n");

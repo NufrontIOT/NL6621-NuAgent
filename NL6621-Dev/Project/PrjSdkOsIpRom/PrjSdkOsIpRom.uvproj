@@ -955,6 +955,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\Device\simu_uart.c</FilePath>
             </File>
+            <File>
+              <FileName>log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\User\log.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

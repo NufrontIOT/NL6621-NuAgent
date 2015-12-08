@@ -16,6 +16,7 @@
  *       ChangLog:
  *        version    Author      Date          Purpose
  *        0.0.1      Lin Hui    2015/06/26     Create and Initialize
+ *        0.0.2      Hui Lou    2015/12/7      repair (Socket_CreateTCPServer) bug.
  * =====================================================================================
  **/
 
@@ -67,7 +68,7 @@ char * TCPServerRecv_data = NULL;
  * */
 #define UDP_SERVER_PORT              (60001)        /* LAN TCP server port */
 #define UDP_SERVER_BUFFER_SIZE       (2048)	    	/* LAN TCP server receive size */
-static int UDPServerFd = -1;
+int UDPServerFd = -1;
 char * UDPServerRecv_data = NULL;
 
 void InitDomainSem(void)
@@ -343,7 +344,7 @@ int Socket_CreateUDPServer(void)
     if (UDPServerFd == -1) 
     {
         UDPServerFd = socket(AF_INET, SOCK_DGRAM, 0);
-        if (UDPServerFd < 1)
+        if (UDPServerFd < 0)
         {
             log_err("Create UDP server failed, errno:%d.\n", errno);
             UDPServerFd = -1;
@@ -362,7 +363,7 @@ int Socket_CreateUDPServer(void)
             UDPServerFd = -1;
             return -1;
         }
-		log_debug("UDP Server socketid:%d(port:%d)\n", UDPServerFd, UDP_SERVER_PORT);
+		log_info("UDP Server socketid:%d (port:%d)\r\n", UDPServerFd, UDP_SERVER_PORT);
 
 		return UDPServerFd;
     } else {
@@ -377,7 +378,7 @@ int Socket_UDPServerRecvData(void)
     struct sockaddr_in client_addr;
     socklen_t addrLen = sizeof(struct sockaddr_in);
 
-	if (UDPServerFd <= 0) return -1;
+	if (UDPServerFd < 0) return -1;
 
 	while (1) 
 	{

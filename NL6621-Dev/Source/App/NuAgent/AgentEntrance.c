@@ -33,7 +33,7 @@ struct sys_status_t sys_status;
 void print_version(void)
 {
 				/* SDK Version;   	 NuAgent Version;   	Compile Time; */
-	log_notice("Sver:<%x.%02x.%02x>; NuAver:<%x.%02x.%02x>; Time:<%s-%s><%s>;\n", 
+	log_notice("Sver:<%x.%x.%x>; NuAver:<%x.%x.%x>; Time:<%s-%s><%s>;\r\n", 
 		FwVerNum[0], FwVerNum[1], FwVerNum[2],
 		NuAgentVerNum[0], NuAgentVerNum[1], NuAgentVerNum[2],
         __DATE__, __TIME__,
@@ -43,7 +43,7 @@ void print_version(void)
 		"rel"
 		#endif
 	);
-	log_notice("=============================================================\n\n");
+	log_notice("=============================================================\r\n");
 }
 
 void nl6621_main_entry(void * pParam)
