@@ -86,7 +86,7 @@ void printhex(int hex)
     }
     printhex(hex/16);
 
-    printch((char)(hex%16 < 10)? hex%16+'0':hex%16+'A');
+    printch((char)(hex%16 < 10)? hex%16+'0':(hex%16-10)+'A');
 }
 
 void print(char* fmt, ...)
