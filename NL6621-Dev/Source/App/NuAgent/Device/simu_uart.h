@@ -23,22 +23,27 @@
 #ifndef __SIMU_UART_H__
 #define __SIMU_UART_H__
 
-
+#include "nl6621_gpio.h"
 
 
 #if 1
-#define	SIMU_UART_RX_PIN				(6)
-#define	SIMU_UART_TX_PIN				(5)
+#define	SIMU_UART_RX_PIN				(GPIO_Pin_6)
+#define	SIMU_UART_TX_PIN				(GPIO_Pin_5)
 #else
-#define	SIMU_UART_RX_PIN				(29)
-#define	SIMU_UART_TX_PIN				(28)
+#define	SIMU_UART_RX_PIN				(GPIO_Pin_29)
+#define	SIMU_UART_TX_PIN				(GPIO_Pin_28)
 #endif
+
+#define SIMU_UART_TX_HIGH()               GPIO_SetBits(SIMU_UART_TX_PIN)	
+#define SIMU_UART_TX_LOW()                GPIO_ResetBits(SIMU_UART_TX_PIN)	
+
+#define SIMU_UART_GET() 				  GPIO_ReadInputDataBit(SIMU_UART_RX_PIN)
 
 
 void uart_init(void);
 void SimuSendOneByte(unsigned char Byte);
 int simu_uart_timer_task(void);
-void gpio_int_func(int portNum);
+void Simu_UartIRQ_Func(void);
 void simu_uart_init(void);
 void SimuUartOutPut(void);
 

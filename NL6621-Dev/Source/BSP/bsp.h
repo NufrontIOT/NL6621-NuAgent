@@ -16,16 +16,7 @@
 #define _BSP_H
 
 #include "reg.h"
-#include "i2c.h"
-#include "i2s.h"
-#include "flash.h"
-#include "gpio.h"
-#include "timer.h"
-#include "uart.h"
-#include "dma.h"
-#include "sdio.h"
-#include "nvic.h"
-#include "spi.h"
+#include "nl6621_conf.h"
 
 /*
 *********************************************************************************************************
@@ -34,12 +25,12 @@
 */
 
 //*******************************************************************************************************
-VOID  BSP_ClkInit (VOID);
-VOID  BSP_Init(VOID);
-VOID BSP_WakeupCpuIntISR(VOID);
-VOID BSP_EfuseRead(UINT8 Offset, UINT8 Cnt, PUINT32 pEfuseInfo);
-VOID BSP_ChipReset(VOID);
-LARGE_INTEGER BSP_GetLaunchTicks(VOID);// get system launch ticks (1 tick time = 1/32.768KHz)
+void BSP_ClkInit (void);
+void BSP_Init(void);
+void BSP_WakeupCpuIntISR(void);
+void BSP_EfuseRead(uint8_t Offset, uint8_t Cnt, uint32_t * pEfuseInfo);
+void BSP_ChipReset(void);
+LARGE_INTEGER BSP_GetLaunchTicks(void);// get system launch ticks (1 tick time = 1/32.768KHz)
 
 #define NST_WR_PHY_REG(Offset, Value)   /*0x40002000*/\
     {\

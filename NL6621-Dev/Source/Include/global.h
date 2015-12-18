@@ -18,8 +18,6 @@
 
 #include "includes.h"
 
-/* define UART irq enable MACRO */
-#define HW_UART_IRQ_SUPPORT
 
 extern OS_EVENT  * gpMacMngTskMsgQ;
 extern OS_EVENT*  gpSysMngTskMsgQ;

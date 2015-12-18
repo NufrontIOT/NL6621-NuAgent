@@ -47,7 +47,7 @@
 #define     ADDR_LSB_TIME           0x24    // RO
 #define     ADDR_MSB_TIME           0x28    // RO
 
-#ifdef NULINK2_SOC
+
 #define     ADDR_STRAPPING_PIN        0x2C  // RO
 #define      STRIP_BOOT_MODE     (1)
 /*
@@ -181,25 +181,6 @@ GPIO±àºÅ    ¸´ÓÃ¹¦ÄÜ
 #define   SPI_CS_GPIO                        29
 #define   SPI_DO_GPIO                       30
 #define   ENA_SPIM_GPIO                  ((1 << SPI_CK_GPIO) | (1 << SPI_DI_GPIO)| (1 << SPI_CS_GPIO)| (1 << SPI_DO_GPIO))     
-
-#define   PWM0_GPIO                         31
-
-#else // NULINK1
-#define     ADDR_STRAPPING_PIN        0x2C  // RO
-#define     ADDR_PWM_INT_MASK        0x30  // RO
-#define     ADDR_PIN_MUX_CTRL         0x34  // WR
-#define     ADDR_WAKEUP_CPU_MASK    0x38    // WR
-#define     ADDR_UART_SPI_MUX       0x3C    // WR
-
-#define      STRIP_BOOT_MODE     (2)
-
-#define     SEL_UART_SPI                5
-
-#define      ENA_UART_GPIO          (1 << 0)
-#define      ENA_I2C_GPIO             (1 << 1)
-#define      ENA_SPIM_GPIO           (1 << 2)
-
-#endif
 
 
 // chip mode reg

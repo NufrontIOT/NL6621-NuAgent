@@ -40,6 +40,15 @@ extern void nl6621_main_entry(void * pParam);
 **                               FUNCTION PROTOTYPES
 ******************************************************************************
 */
+#include "simu_uart.h"
+
+
+void NuAgent_bsp_init(void)
+{
+    uart_init(); //模拟串口初始化。	 
+}
+
+
 
 /*
 ******************************************************************************
@@ -52,11 +61,15 @@ extern void nl6621_main_entry(void * pParam);
 ** Date         : 
 **
 ******************************************************************************
-*/
+*/	
+
 INT32 main(VOID)
 {
     /* system Init */
     SystemInit();
+
+	/* nuagent bsp init */
+	NuAgent_bsp_init();
 
    /* create application tasks here */
     OSTaskCreate(nl6621_main_entry, NULL, &sAppStartTaskStack[NST_APP_START_TASK_STK_SIZE -1],  NST_APP_TASK_START_PRIO); 

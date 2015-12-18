@@ -15,7 +15,8 @@
 #include    "util.h"
 #include    "global.h"
 #include    "task_util.h"
-#include    "wdg.h"
 #include    "param.h"
 #include    "lwip.h"
+
+#include    "nl6621_bspdemo.h"
 #endif /*INCLUDES_H_*/

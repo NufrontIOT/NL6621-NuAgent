@@ -285,18 +285,21 @@ void Agent_network_init(void)
 {
     UINT8 gpio_val;
 	int ret = 0;
+  	GPIO_InitTypeDef  GPIO_InitStructure;
 
-	/* DirectConfig gpio is valied when set to low level */
-	BSP_GPIOPinMux(USER_GPIO_DIRECTCONFIG);  
-	BSP_GPIOSetDir(USER_GPIO_DIRECTCONFIG, GPIO_DIRECTION_INPUT);
+
+	/* DirectConfig gpio is valied when set to low level */				
+	GPIO_InitStructure.GPIO_Pin = USER_GPIO_DIRECTCONFIG;   
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_In;        
+	GPIO_Init(&GPIO_InitStructure);
 
     /* if the Directconfig button was pressed(gpio is low level), then set to Directconfig
      * mode.
      * */
-    gpio_val = BSP_GPIOGetValue(USER_GPIO_DIRECTCONFIG);
+    gpio_val = GPIO_ReadInputDataBit(USER_GPIO_DIRECTCONFIG);
     if (gpio_val == 0) {
         OSTimeDly(20);		/* delay 200ms, filter button shake */
-        gpio_val = BSP_GPIOGetValue(USER_GPIO_DIRECTCONFIG);
+        gpio_val = GPIO_ReadInputDataBit(USER_GPIO_DIRECTCONFIG);
         if (gpio_val == 0) {
 			/* Set system status */
 			sys_status.status = SYS_STATUS_WIFI_DIRECTCONFING;	

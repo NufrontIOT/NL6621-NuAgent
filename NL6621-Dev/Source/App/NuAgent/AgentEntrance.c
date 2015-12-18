@@ -22,9 +22,9 @@
 
 extern const INT8U FwVerNum[3];
 const INT8U NuAgentVerNum[3] = {
-	0x01,  /* Main version */ 
-	0x01,  /* Sub version */
-	0x01   /* Internal version */
+	0x02,  /* Main version */ 
+	0x00,  /* Sub version */
+	0x00   /* Internal version */
 };
 
 /* system status */

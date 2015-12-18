@@ -28,12 +28,22 @@ extern struct sys_status_t sys_status;
 /****************************************************************/
 /****************** NuAgent LED indicater interface *************/
 /****************************************************************/
+void LED_GPIO_Init(void)
+{   
+	GPIO_InitTypeDef  GPIO_InitStructure;
+
+	//初始化LED指示灯，GPIO9(PIN7)		
+	GPIO_InitStructure.GPIO_Pin = USER_GPIO_IDX_LED;	
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out; 	//设置输出
+	GPIO_Init(&GPIO_InitStructure);
+	GPIO_ResetBits(USER_GPIO_IDX_LED);			    //输出低电平	
+}
 
 void update_led_indicator(unsigned int low_time, unsigned int high_time)
 {
-	BSP_GPIOSetValue(USER_GPIO_IDX_LED, GPIO_LOW_LEVEL);
+	GPIO_ResetBits(USER_GPIO_IDX_LED);				        //输出低电平	
 	OSTimeDly(low_time);	
-	BSP_GPIOSetValue(USER_GPIO_IDX_LED, GPIO_HIGH_LEVEL);
+	GPIO_SetBits(USER_GPIO_IDX_LED);				        //输出高电平	
 	OSTimeDly(high_time);
 }
 
@@ -46,18 +56,14 @@ void update_led_indicator(unsigned int low_time, unsigned int high_time)
  */
 void SysIdxLedThread(void *arg)
 {
-	//log_notice("Create system LED indicator task success.\r\n");
-
-	/* initialize LED indicator gpio */
-	BSP_GPIOPinMux(USER_GPIO_IDX_LED);		    /* led indicator */
-	BSP_GPIOSetDir(USER_GPIO_IDX_LED, 1);		/* output */
-	BSP_GPIOSetValue(USER_GPIO_IDX_LED, 0);	    /* low level */
+	log_notice("Create system LED indicator task success.\r\n");
+	LED_GPIO_Init();
 
 	while (1) {
 		switch (sys_status.status) {
 			case SYS_STATUS_WIFI_STOP:
 				while (sys_status.status == SYS_STATUS_WIFI_STOP) {
-					BSP_GPIOSetValue(USER_GPIO_IDX_LED, GPIO_LOW_LEVEL);
+                	GPIO_ResetBits(USER_GPIO_IDX_LED);				        //输出低电平	
 					OSTimeDly(200);
 				}
 				break;
@@ -76,7 +82,7 @@ void SysIdxLedThread(void *arg)
 
 			case SYS_STATUS_WIFI_STA_LOGIN:
 				while (sys_status.status == SYS_STATUS_WIFI_STA_LOGIN) {
-					BSP_GPIOSetValue(USER_GPIO_IDX_LED, GPIO_HIGH_LEVEL);
+					GPIO_SetBits(USER_GPIO_IDX_LED);				        //输出低电平	
 					OSTimeDly(200);
 				}
 				break;
@@ -99,13 +105,16 @@ static unsigned int system_reset_flag = 0;
 
 void Agent_reset_init(void)
 {
-	/* Reset gpio is valied when set to low level */
-	BSP_GPIOPinMux(USER_GPIO_RESET_BUTTON);  
-	BSP_GPIOSetDir(USER_GPIO_RESET_BUTTON, GPIO_DIRECTION_INPUT);
+	GPIO_InitTypeDef  GPIO_InitStructure;
+
+	/* Reset gpio is valied when set to low level */		 
+	/* GPIO10=设置输入，内部没有上下拉，需要外部上下拉   */			
+	GPIO_InitStructure.GPIO_Pin = USER_GPIO_RESET_BUTTON;   //管脚PIN51
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_In;        	//设置输出
+	GPIO_Init(&GPIO_InitStructure);
 
 	/* Set GAgent reset flag */
 	system_reset_flag = 0x12345678;
-	log_info("Create GAgent reset task success.\n");
 }
 
 void SysResetThread(void *arg)
@@ -119,11 +128,11 @@ void SysResetThread(void *arg)
 	{
 		if (system_reset_flag == 0x12345678) 
 		{
-			gpio_val = BSP_GPIOGetValue(USER_GPIO_RESET_BUTTON);
+			gpio_val = GPIO_ReadInputDataBit(USER_GPIO_RESET_BUTTON);
 			if (gpio_val == USER_RESET_BUTTON_PRESS) {
 				for (i = 0; i < USER_RESET_PRESS_TIMEOUT; i++) {
 					OSTimeDly(50);		/* delay 500ms filter button shake */
-					gpio_val = BSP_GPIOGetValue(USER_GPIO_RESET_BUTTON);
+					gpio_val = GPIO_ReadInputDataBit(USER_GPIO_RESET_BUTTON);
 					if (gpio_val != USER_RESET_BUTTON_PRESS) {
 						break;
 					}

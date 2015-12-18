@@ -22,11 +22,6 @@
 #include "common.h"
 #include "simu_uart.h"
 
-#define UART_REAL_PIN    	        0
-
-#define IRDA_DATA_MAX_LEN		   (116)
-
-#define SIMU_UART_RX_INPUT()	   {BSP_GPIOPinMux(SIMU_UART_RX_PIN); BSP_GPIOSetDir(SIMU_UART_RX_PIN, 0);}
 
 //SIMU TX
 #define SIMU_UART_SEND_BUF_SIZE	   (1024)
@@ -50,11 +45,14 @@ unsigned int bytes_cnt = 0;
 //SIMU RX 
 /* initialize Uart transmit gpio */
 void simu_uart_tx_init(void) 
-{
-	/* initialize uart output pin */
-	BSP_GPIOPinMux(SIMU_UART_TX_PIN);
-	BSP_GPIOSetDir(SIMU_UART_TX_PIN, 1);		/* output */
-	BSP_GPIOSetValue(SIMU_UART_TX_PIN, 1);	/* high level */
+{		  
+    GPIO_InitTypeDef  GPIO_InitStructure;
+	 
+	/* GPIO5=设置输出高电平，低电平  */			
+    GPIO_InitStructure.GPIO_Pin = SIMU_UART_TX_PIN;		//管脚PIN51
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out; 	//设置输出
+	GPIO_Init(&GPIO_InitStructure);
+	SIMU_UART_TX_HIGH();					//输出高电平
 
 	/* alloc ring buffer */
 	ring_buf_alloc(&SimuUartTxBuf, SIMU_UART_SEND_BUF_SIZE);
@@ -62,7 +60,6 @@ void simu_uart_tx_init(void)
 	byte_status.byte = 0x0;
 	byte_status.bit = 0x0;
 	byte_status.over_flag = 0x0;
-
 }
 
 void SimuUartOutPut(void)
@@ -71,12 +68,17 @@ void SimuUartOutPut(void)
 	if (byte_status.over_flag != 0)
 	{
 		if (byte_status.bit == 0)
-			BSP_GPIOSetValue(SIMU_UART_TX_PIN, 0);
+			SIMU_UART_TX_LOW();	
 		else if (byte_status.bit < 9)
-			BSP_GPIOSetValue(SIMU_UART_TX_PIN, (byte_status.byte >> (byte_status.bit-1)) & 0x01);
+		{
+			if((byte_status.byte >> (byte_status.bit-1)) & 0x01)
+			   	SIMU_UART_TX_HIGH();
+			else
+			    SIMU_UART_TX_LOW();
+		}
 		else
 		{
-			BSP_GPIOSetValue(SIMU_UART_TX_PIN, 1);
+			SIMU_UART_TX_HIGH();
 			byte_status.over_flag = 0x0;
 		}
 		byte_status.bit++;	
@@ -93,7 +95,7 @@ void SimuUartOutPut(void)
 		}
 		else
 		{
-			BSP_GPIOSetValue(SIMU_UART_TX_PIN, 1);
+			SIMU_UART_TX_HIGH();
  	        *Tmr1Ctl = TMR_INT_MASK;   //关闭中断
 		}
 	}
@@ -108,13 +110,23 @@ void SimuSendOneByte(unsigned char ch)
 /* initialize Uart receive gpio */
 void simu_uart_rx_init(void) {
 
-    BSP_GPIOPinMux(SIMU_UART_RX_PIN);
-	BSP_GPIOSetDir(SIMU_UART_RX_PIN, 0);
-                                                        
-	BSP_GPIOIntMask(SIMU_UART_RX_PIN, 0);  /* unmask gpio interrupt. */
-    BSP_GPIOIntEn(SIMU_UART_RX_PIN, 1, 0); /* level low trigger */
+    GPIO_InitTypeDef GPIO_InitStructure;
+ 	EXTI_InitTypeDef EXTI_InitStructure;
 
-	gpio_int_enable(SIMU_UART_RX_PIN);
+    /* 初始化SIMU_UART_RX_PIN输入 */
+  	GPIO_InitStructure.GPIO_Pin  = SIMU_UART_RX_PIN;
+  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_In;
+  	GPIO_Init(&GPIO_InitStructure);
+
+    GPIO_EXTILineConfig(GPIO_Pin_22,IRQ_ENABLE);
+    /* 初始化SIMU_UART_RX_PIN下降沿触发 */
+   	EXTI_InitStructure.EXTI_Line = SIMU_UART_RX_PIN;
+  	EXTI_InitStructure.EXTI_Mode = EXTI_EDGE_SENSITIVE;	
+  	EXTI_InitStructure.EXTI_Trigger = EXTI_ACTIVE_LOW;
+  	EXTI_InitStructure.EXTI_LineCmd = IRQ_ENABLE;
+  	EXTI_Init(&EXTI_InitStructure);	 
+
+	EXTI_GPIO_Cmd(SIMU_UART_RX_PIN,IRQ_ENABLE);
 }
 
 int simu_uart_timer_task(void)
@@ -122,14 +134,14 @@ int simu_uart_timer_task(void)
 	int gpio_value = 0;
 
 	if (recv_stop_flag == 0) {
-	    gpio_value = BSP_GPIOGetValue(SIMU_UART_RX_PIN);		    
+	    gpio_value = SIMU_UART_GET();		    
 		
 		if (data_cnt == 0) {	/* start bit */
 			if (gpio_value != 0) {	/* false */
 				/* set recv data stop flag */
 				recv_stop_flag = 1;
 				/* enable gpio interrupt */
-				gpio_int_enable(SIMU_UART_RX_PIN);
+			    EXTI_GPIO_Cmd(SIMU_UART_RX_PIN,IRQ_ENABLE);
 				return -1;		
 			}
 			byte = 0x0;
@@ -155,7 +167,7 @@ int simu_uart_timer_task(void)
 				bytes_cnt = 0;
 		        data_cnt = 0;
 				/* enable gpio interrupt */
-				gpio_int_enable(SIMU_UART_RX_PIN); 
+            	EXTI_GPIO_Cmd(SIMU_UART_RX_PIN,IRQ_ENABLE);
 				*Tmr0Ctl = TMR_INT_MASK;
 			}			
 			return 0;	
@@ -167,28 +179,34 @@ int simu_uart_timer_task(void)
 	return 0;
 }
 
-void gpio_int_func(int portNum)
+void Simu_UartIRQ_Func(void)
 {
 	int gpio_value;
-    
+
+	EXTI_ClearITPendingBit(SIMU_UART_RX_PIN);      
     /* disable gpio interrupt */
-	gpio_int_disable(SIMU_UART_RX_PIN);
+	EXTI_GPIO_Cmd(SIMU_UART_RX_PIN,IRQ_DISABLE);
 
-	gpio_value = BSP_GPIOGetValue(SIMU_UART_RX_PIN);
-	if (gpio_value == 0) {
-		/* Start timer1 */
-		bytes_cnt = 0;
-		data_cnt = 0;
-		recv_stop_flag = 0;
-
-		//开启中断
-	    gpio_value = *Tmr0Eoi;
-	    gpio_value = *TmrsEoi;
-		*Tmr0Load = SIMU_UART_Baudrate/2;
-		*Tmr0Ctl = (~TMR_INT_MASK) |TMR_ENA | TMR_USER_DEFINE_MODE;
-		return;
+	if(EXTI_GetITStatus(SIMU_UART_RX_PIN) != RESET)	
+	{		
+	  //add user code
+		gpio_value = SIMU_UART_GET();
+		if (gpio_value == 0) {  //判断是否串口起始位
+			/* Start timer1 */
+			bytes_cnt = 0;
+			data_cnt = 0;
+			recv_stop_flag = 0;
+	
+			//开启中断
+		    gpio_value = *Tmr0Eoi;
+		    gpio_value = *TmrsEoi;
+			*Tmr0Load = SIMU_UART_Baudrate/2;
+			*Tmr0Ctl = (~TMR_INT_MASK) |TMR_ENA | TMR_USER_DEFINE_MODE;
+			return;
+		}	  	
 	}
-	gpio_int_enable(SIMU_UART_RX_PIN);
+
+	EXTI_GPIO_Cmd(SIMU_UART_RX_PIN,IRQ_ENABLE);
 	*Tmr0Ctl = TMR_INT_MASK;
 }
 

@@ -14,23 +14,21 @@
 //------------------------------------------------------------------------------------------------------
 #include "includes.h"
 #include "bsp.h"
-#include "i2c.h"
-#include "i2s.h"
 #include "mpu.h"
 
-UINT32 CpuClkFreq = CPU_CLK_FREQ_160M;
-UINT32 ApbClkFreq = APB_CLK_FREQ_40M;
+uint32_t CpuClkFreq = CPU_CLK_FREQ_160M;
+uint32_t ApbClkFreq = APB_CLK_FREQ_40M;
 
 NV_INFO EeBuffer;
 
-extern VOID BSP_RFInit(VOID);
+extern void BSP_RFInit(void);
 #ifdef ADD_IQ_CALIBRATION
-extern VOID IQCalibration(VOID);
+extern void IQCalibration(void);
 #endif
-extern VOID  BSP_SmidLowMacIntEnable(VOID);
-extern VOID BSP_SetPwmRegDefaultVal(VOID);
-extern VOID BSP_SetMacRegDefaultVal(VOID);
-extern INT32  BSP_NvInfoInit(VOID);
+extern void BSP_SmidLowMacIntEnable(void);
+extern void BSP_SetPwmRegDefaultVal(void);
+extern void BSP_SetMacRegDefaultVal(void);
+extern int32_t  BSP_NvInfoInit(void);
 
 /*
 ******************************************************************************
@@ -50,7 +48,7 @@ extern INT32  BSP_NvInfoInit(VOID);
   b31
   N(neg) |Z(Zero) |C(Carry)| V(Over) |Q(饱和) | J |  Rsv(b25:b8)| GE[3:0](>=) | E(Endian)| A(禁止abort) | I(禁止IRQ) | F(禁止FIQ) | T(thumb/arm)| mode(usr/FIQ/IRQ/SVC/ABT/UNDEFINE/SYSTEM)
 */
-VOID  BSP_GlobalIrqIntEnable (VOID)
+void  BSP_GlobalIrqIntEnable (void)
 {
 // 清IRQbit使能IRQ全局中断      
  //OS_CPU_ARM_CONTROL_INT_DIS      EQU  0xC0                     ; Disable both FIQ and IRQ. 
@@ -80,7 +78,7 @@ VOID  BSP_GlobalIrqIntEnable (VOID)
 **
 ******************************************************************************
 */
-VOID  BSP_GlobalIrqIntDisable (VOID)
+void  BSP_GlobalIrqIntDisable (void)
 {
      //置IRQbit禁止IRQ中断  
      
@@ -113,9 +111,9 @@ VOID  BSP_GlobalIrqIntDisable (VOID)
 */
 
 // USE nufront link board
-static  VOID  BSP_IntCtrlInit (BOOL_T bSdioInitDone)
+static  void  BSP_IntCtrlInit (BOOL_T bSdioInitDone)
 {
-    UINT32   AIRCR;
+    uint32_t   AIRCR;
     
     // TODO中断控制器寄存器参数初始化
     NVIC_InitTypeDef NVIC_InitStructure;
@@ -124,7 +122,7 @@ static  VOID  BSP_IntCtrlInit (BOOL_T bSdioInitDone)
     if(!bSdioInitDone) // SDIO不掉电，SRAM掉电后加载不能关中断
         BSP_GlobalIrqIntDisable();
 
-// SET priority group [10:8] = 4   
+     // SET priority group [10:8] = 4   
     AIRCR = ((NST_SCB->AIRCR & (~0x700)) | (AIRCR_PRI_GROUP << 8)); // [7:5] preemption prio  [4:0] sub priority
     // 写AIRCR需要有key，只有高16bit为0x05FA时才能写进去
     NST_SCB->AIRCR = (AIRCR & 0x0000FFFF) | AIRCR_VECT_KEY;; 
@@ -187,14 +185,13 @@ static  VOID  BSP_IntCtrlInit (BOOL_T bSdioInitDone)
     NVIC_Init(&NVIC_InitStructure);
 #endif //HW_I2S_SUPPORT
 
-#ifdef HW_UART_IRQ_SUPPORT
     /* Configure UART interrupt */
     NVIC_InitStructure.NVIC_IRQChannel = UART_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = UART_IRQn_PRIO;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd = IRQ_ENABLE;
     NVIC_Init(&NVIC_InitStructure);
-#endif //HW_UART_IRQ_SUPPORT
+
 
    NST_SCB->SHCSR = (NST_SCB->SHCSR |(SCB_SHCSR_MEMFAULTENA | SCB_SHCSR_BUSFAULTENA | SCB_SHCSR_USGFAULTENA)); 
 
@@ -223,17 +220,17 @@ static  VOID  BSP_IntCtrlInit (BOOL_T bSdioInitDone)
 **
 ******************************************************************************
 */
-VOID  BSP_ClkInit (VOID)
+void  BSP_ClkInit (void)
 {
-// clk init
-/*CHIP MODE
-      31:4    |        5          |       4:3   |           2           |    1:0           
-       Rsv    | CPU Sel ena  |   CPU Sel |   Bandwith Ena  |  Bandwith
-
-CLK_CTRL
-      31:7     |             4         |            3         |            2         |     1:0 
-      Rsv      | APB2_GATE_E    | APB1_GATE_E  | WLAN_GATE_E  |  APB_SEL
-*/
+	// clk init
+	/*CHIP MODE
+	      31:4    |        5          |       4:3   |           2           |    1:0           
+	       Rsv    | CPU Sel ena  |   CPU Sel |   Bandwith Ena  |  Bandwith
+	
+	CLK_CTRL
+	      31:7     |             4         |            3         |            2         |     1:0 
+	      Rsv      | APB2_GATE_E    | APB1_GATE_E  | WLAN_GATE_E  |  APB_SEL
+	*/
 
     if(CpuClkFreq == CPU_CLK_FREQ_160M)
     {
@@ -276,100 +273,38 @@ CLK_CTRL
 **
 ******************************************************************************
 */
-VOID  BSP_Init (VOID)
+void  BSP_Init (void)
 {
-    BSP_GPIOInit();
+    BSP_SetPwmRegDefaultVal();	    //设置PWM默认值，切勿改变。
+    BSP_SetMacRegDefaultVal();      //设置MAC默认值，切勿改变。
 
-    BSP_SetPwmRegDefaultVal();
-    BSP_SetMacRegDefaultVal();
+    BSP_IntCtrlInit(NST_FALSE);     //Cortex-M3中断优先级	                              
 
-    BSP_IntCtrlInit(NST_FALSE);                               
-    BSP_SDIOInit();
+    BSP_RFInit();					//RF射频初始化
 
-    BSP_RFInit();
+    MPU_Init();						//MPU内存规划
+
 #ifdef ADD_IQ_CALIBRATION
-    IQCalibration();
+    IQCalibration();				//校准参数
 #endif
 
-#ifdef SPI_SDIO_CMD_TEST
-    BSP_Timer1Init(0x600000); // used for spi sdio command test
-#endif
+    USART_Init_Demo(DEFAULT_UART_BAUDRATE); //初始化串口，波特率115200
 
-#if DEBUG_ON
-    #ifdef USE_CORTEX_M3
-        BSP_UartOpen(DEFAULT_UART_BAUDRATE); // for debug info printf
-    #endif
-#endif
-
-    BSP_NvInfoInit();
+    BSP_NvInfoInit();               //FLASH初始化，校验系统数据
     
-    MPU_Init();
-
-    //BSP_I2CInit(E2PROM_ADDR); 
-
-#ifdef HW_I2S_SUPPORT
-    BSP_I2SInit();
-#endif //HW_I2S_SUPPORT
-
-    BSP_DmaInit(DMA_CHANNEL_0); //init dma channel 0
-
-#ifdef DMA_MOVE_MEM
-    BSP_DmaMoveMemInit(DMA_CHANNEL_1); // init DMA CH 1 for memory move
-#endif // DMA_MOVE_MEM //
-
-   uart_init();
-}
-
-
-/*
-******************************************************************************
-**                        VOID BSP_WakeupCpuIntISR(VOID)
-**
-** Description  : Wakeup cpu INT handler
-** Arguments    : 
-                  
-                  
-** Returns      : 无
-** Author       :                                   
-** Date         : 
-**
-******************************************************************************
-*/
-VOID BSP_WakeupCpuIntISR(VOID)
-{
-    NST_TskMsg* msg;
-
-    //DBGPRINT_PS(DEBUG_TRACE, "MLME_AUTO_WAKEUP_ID\n");
-    
-    //Set Mask
-    NST_WR_PWM_REG(ADDR_WAKEUP_CPU_MASK, 0x00000003);
-    
-    //  关WAKE UP中断
-    NVIC_DisableIRQ(WAKEUP_CPU_IRQn);
-    /*  清M3 的中断*/
-    NVIC_ClearIRQChannelPendingBit(WAKEUP_CPU_IRQn);
-    //发消息给syscore
-    msg = NST_AllocTskMsg();
-    if(msg)
-    {
-        msg->msgId = MLME_AUTO_WAKEUP_ID;  
-     //   NST_ZERO_MEM(msg->msgBody, sizeof(msg->msgBody));
-        
-        NST_SendMsg(gpMacMngTskMsgQ, msg);
-    }
-    // 开中断
-    NVIC_EnableIRQ(WAKEUP_CPU_IRQn);
+	
+	NL6621_BSP_TEST(); //NL6621 BSP测试			           
 }
 
 #ifdef USE_NV_INFO
 
-static VOID CheckParam(PNV_INFO pNvInfo)
+static void CheckParam(PNV_INFO pNvInfo)
 {
-extern BOOL_T CheckAuthCode(VOID);
-extern  const UINT8    ZERO_MAC_ADDR[MAC_ADDR_LEN];
-#define COPY_MAC_ADDR(Addr1, Addr2)             NST_MOVE_MEM((Addr1), (Addr2), MAC_ADDR_LEN)
-#define MAC_ADDR_IS_GROUP(Addr)       (((Addr[0]) & 0x01))
-#define TX_GAIN_MAP_TBL_SIZE     0x28//0x26
+	extern BOOL_T CheckAuthCode(VOID);
+	extern  const UINT8                  ZERO_MAC_ADDR[MAC_ADDR_LEN];
+	#define COPY_MAC_ADDR(Addr1, Addr2)  NST_MOVE_MEM((Addr1), (Addr2), MAC_ADDR_LEN)
+	#define MAC_ADDR_IS_GROUP(Addr)      (((Addr[0]) & 0x01))
+	#define TX_GAIN_MAP_TBL_SIZE         0x28//0x26
 
     UINT32  i = 0;
 
@@ -402,7 +337,7 @@ extern  const UINT8    ZERO_MAC_ADDR[MAC_ADDR_LEN];
 
 #endif // USE_NV_INFO
 
-INT32  BSP_NvInfoInit(VOID)
+int32_t  BSP_NvInfoInit(void)
 {
     PNV_INFO pNvInfo = (PNV_INFO)&EeBuffer;
 
@@ -418,22 +353,10 @@ INT32  BSP_NvInfoInit(VOID)
     //
     // 2: USE FLASH PARAM
     //
-    {
-        {
-#ifdef NULINK2_SOC
-            BSP_QSpiInit(DEFAULT_QSPI_CLK);
-#else
-            BSP_SpiInit();
-#endif
 
-#ifdef NULINK2_SOC
-            QSpiFlashRead(NV_INFO_START, (UINT8*)pNvInfo, sizeof(NV_INFO));
-#else
-            SpiFlashRead(NV_INFO_START, (UINT8*)pNvInfo, sizeof(NV_INFO));
-#endif
-        }
-        
-    }
+    BSP_QSpiInit(DEFAULT_QSPI_CLK);
+
+    QSpiFlashRead(NV_INFO_START, (UINT8*)pNvInfo, sizeof(NV_INFO));
 
     // CHECK PARAM
     CheckParam(pNvInfo);
@@ -441,6 +364,48 @@ INT32  BSP_NvInfoInit(VOID)
 #endif // USE_NV_INFO
     
     return NST_STATUS_SUCCESS;
+}
+
+
+
+/*
+******************************************************************************
+**                        VOID BSP_WakeupCpuIntISR(VOID)
+**
+** Description  : Wakeup cpu INT handler
+** Arguments    : 
+                  
+                  
+** Returns      : 无
+** Author       :                                   
+** Date         : 
+**
+******************************************************************************
+*/
+void BSP_WakeupCpuIntISR(void)
+{
+    NST_TskMsg* msg;
+
+    //DBGPRINT_PS(DEBUG_TRACE, "MLME_AUTO_WAKEUP_ID\n");
+    
+    //Set Mask
+    NST_WR_PWM_REG(ADDR_WAKEUP_CPU_MASK, 0x00000003);
+    
+    //  关WAKE UP中断
+    NVIC_DisableIRQ(WAKEUP_CPU_IRQn);
+    /*  清M3 的中断*/
+    NVIC_ClearIRQChannelPendingBit(WAKEUP_CPU_IRQn);
+    //发消息给syscore
+    msg = NST_AllocTskMsg();
+    if(msg)
+    {
+        msg->msgId = MLME_AUTO_WAKEUP_ID;  
+     //   NST_ZERO_MEM(msg->msgBody, sizeof(msg->msgBody));
+        
+        NST_SendMsg(gpMacMngTskMsgQ, msg);
+    }
+    // 开中断
+    NVIC_EnableIRQ(WAKEUP_CPU_IRQn);
 }
 
 /*

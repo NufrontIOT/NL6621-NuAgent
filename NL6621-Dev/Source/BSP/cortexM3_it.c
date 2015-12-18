@@ -21,13 +21,8 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-extern VOID BSP_LowMacIntISR(VOID);
-
-
-//模拟串口，发送和接收
-extern void gpio_int_func(int portNum);
-extern int simu_uart_timer_task(void);
-extern void SimuUartOutPut(void);
+extern void BSP_LowMacIntISR(void);
+extern void Simu_UartIRQ_Func(void);
 
 /*******************************************************************************
 * Function Name  : NMIException
@@ -57,29 +52,29 @@ __asm void FaultHandler_asm(void)
     B   FaultHandler_c
 }
 
-#define DUMP_SIZE                 256
+#define DUMP_SIZE             256
 #define DUMP_REG_SIZE         32
-#define DUMP_STACK_ADR      (_DATA_SRAM_BASE_ADR + DATA_SRAM_SIZE - DUMP_SIZE)
+#define DUMP_STACK_ADR        (_DATA_SRAM_BASE_ADR + DATA_SRAM_SIZE - DUMP_SIZE)
 
-VOID FaultHandler_c(UINT32 * FaultArgs)
+void FaultHandler_c(uint32_t * FaultArgs)
 {
-    UINT32 StackedR0;
-    UINT32 StackedR1;
-    UINT32 StackedR2;
-    UINT32 StackedR3;
-    UINT32 StackedR12;
-    UINT32 StackedLR;
-    UINT32 StackedPC;
-    UINT32 StackedPSR;
+    uint32_t StackedR0;
+    uint32_t StackedR1;
+    uint32_t StackedR2;
+    uint32_t StackedR3;
+    uint32_t StackedR12;
+    uint32_t StackedLR;
+    uint32_t StackedPC;
+    uint32_t StackedPSR;
 
-    StackedR0 = (UINT32)FaultArgs[0];
-    StackedR1 = (UINT32)FaultArgs[1];
-    StackedR2 = (UINT32)FaultArgs[2];
-    StackedR3 = (UINT32)FaultArgs[3];
-    StackedR12 = (UINT32)FaultArgs[4];
-    StackedLR = (UINT32)FaultArgs[5];
-    StackedPC = (UINT32)FaultArgs[6];
-    StackedPSR = (UINT32)FaultArgs[7];
+    StackedR0 = (uint32_t)FaultArgs[0];
+    StackedR1 = (uint32_t)FaultArgs[1];
+    StackedR2 = (uint32_t)FaultArgs[2];
+    StackedR3 = (uint32_t)FaultArgs[3];
+    StackedR12 = (uint32_t)FaultArgs[4];
+    StackedLR = (uint32_t)FaultArgs[5];
+    StackedPC = (uint32_t)FaultArgs[6];
+    StackedPSR = (uint32_t)FaultArgs[7];
 
     // dump common regs and fault regs
     NST_MOVE_MEM((UINT8*)DUMP_STACK_ADR, FaultArgs, DUMP_REG_SIZE);
@@ -205,11 +200,7 @@ __irq void PendSVC(void)
 
 __irq void SysTickHandler(void)
 {
-    OS_CPU_SR  cpu_sr;
-
-    OS_ENTER_CRITICAL();  //保存全局中断标志,关总中断/* Tell uC/OS-II that we are starting an ISR*/
-    OSIntNesting++;
-    OS_EXIT_CRITICAL();   //恢复全局中断标志
+    OSIntEnter();
 
     OSTimeTick();      /* Call uC/OS-II's OSTimeTick(),在os_core.c文件里定义,主要判断延时的任务是否计时到*/
 
@@ -270,7 +261,7 @@ __irq void EXTI2_IRQHandler(void)
 *******************************************************************************/
 __irq void EXTI3_IRQHandler(void)
 {
-	gpio_int_func(3);
+
 }
 
 /*******************************************************************************
@@ -303,7 +294,11 @@ __irq void EXTI5_IRQHandler(void)
 *******************************************************************************/
 __irq void EXTI6_IRQHandler(void)
 {
-	gpio_int_func(6);
+    OSIntEnter();
+
+	Simu_UartIRQ_Func();
+
+	OSIntExit();
 }
 /*******************************************************************************
 * Function Name  : EXTI7_IRQHandler
@@ -323,29 +318,14 @@ __irq void EXTI7_IRQHandler(void)
 * Return         : None
 *******************************************************************************/
 __irq void TMR1_IRQHandler(void)
-{
-    UINT32 RegEoi;
-    
+{   
     OSIntEnter();
-    
-  //  ASSERT(NVIC_GetIRQChannelPendingBitStatus(TMR0_IRQn) == SET);
-  //  ASSERT(*Tmr0IntStatus & 0x01);
-    //  关中断
-    NVIC_DisableIRQ(TMR1_IRQn);
-  
+    NVIC_DisableIRQ(TMR1_IRQn); 
     NVIC_ClearIRQChannelPendingBit(TMR1_IRQn);
+		    
+	TMR1_IRQFunc();
 
-// clear timer interrupt
-    RegEoi = *Tmr1Eoi;
-    RegEoi = *TmrsEoi;
-    RegEoi = RegEoi;
-
-    SimuUartOutPut();//模拟串口发送数据
-
-
-   // 开中断
-    NVIC_EnableIRQ(TMR1_IRQn);
-
+    NVIC_EnableIRQ(TMR1_IRQn); 
     OSIntExit();
 }
 
@@ -358,27 +338,13 @@ __irq void TMR1_IRQHandler(void)
 *******************************************************************************/
 __irq void TMR0_IRQHandler(void)
 {
-    UINT32 RegEoi;
-    
     OSIntEnter();
-    
-  //  ASSERT(NVIC_GetIRQChannelPendingBitStatus(TMR0_IRQn) == SET);
-  //  ASSERT(*Tmr0IntStatus & 0x01);
-    //  关中断
-    NVIC_DisableIRQ(TMR0_IRQn);
-  
+    NVIC_DisableIRQ(TMR0_IRQn); 
     NVIC_ClearIRQChannelPendingBit(TMR0_IRQn);
 
-// clear timer interrupt
-    RegEoi = *Tmr0Eoi;
-    RegEoi = *TmrsEoi;
-    RegEoi = RegEoi;
-    
-  	simu_uart_timer_task();
+    TMR0_IRQFunc();
 
-   // 开中断
-    NVIC_EnableIRQ(TMR0_IRQn);
-
+    NVIC_EnableIRQ(TMR0_IRQn); 
     OSIntExit();
 }
 
@@ -391,9 +357,14 @@ __irq void TMR0_IRQHandler(void)
 *******************************************************************************/
 __irq void UART_IRQHandler(void)
 {
-#ifdef HW_UART_IRQ_SUPPORT
-     BSP_UartISR();
-#endif //HW_UART_IRQ_SUPPORT
+    OSIntEnter();  
+    NVIC_DisableIRQ(UART_IRQn);
+    NVIC_ClearIRQChannelPendingBit(UART_IRQn);
+
+    BSP_UartISR_Demo();
+
+    NVIC_EnableIRQ(UART_IRQn);
+    OSIntExit();
 }
 
 /*******************************************************************************
@@ -405,29 +376,18 @@ __irq void UART_IRQHandler(void)
 *******************************************************************************/
 __irq void WWDG0_IRQHandler(void)
 {
-    void BSP_UartPutcPolled(UINT8 Data);
-    
-    UINT32 RegEoi;
-    
+    uint32_t RegEoi;
 
+    OSIntEnter();
+    NVIC_DisableIRQ(WWDG0_IRQn);     
     NVIC_ClearIRQChannelPendingBit(WWDG0_IRQn);
 
 // clear  interrupt
     RegEoi = *Wdt0Eoi;
     RegEoi = RegEoi;
-    
-    #if 0
-  #if DEBUG_ON  
-    // add for debug
-    BSP_UartPutcPolled('W');
-    BSP_UartPutcPolled('D');
-    BSP_UartPutcPolled('O');
-    BSP_UartPutcPolled('G');
-    BSP_UartPutcPolled('!');
-    BSP_UartPutcPolled('!');
-    BSP_UartPutcPolled('\n');
- #endif
-    #endif
+
+    NVIC_EnableIRQ(WWDG0_IRQn);
+    OSIntExit();
 }
 
 /*******************************************************************************
@@ -439,7 +399,11 @@ __irq void WWDG0_IRQHandler(void)
 *******************************************************************************/
 __irq void SMID_IRQHandler(void)
 {
+    OSIntEnter();
+
     BSP_HostIntISR();
+
+    OSIntExit();
 }
 
 /*******************************************************************************
@@ -451,7 +415,11 @@ __irq void SMID_IRQHandler(void)
 *******************************************************************************/
 __irq void LowMac_IRQHandler(void)
 {
+    OSIntEnter();
+
     BSP_LowMacIntISR();
+
+    OSIntExit();
 }
 
 /*******************************************************************************
@@ -488,17 +456,25 @@ __irq void DUMMY0_IRQHandler(void)
 {}
 __irq void DMA_IRQHandler(void)
 {
+    OSIntEnter();
+
     BSP_DmaIntISR();
+
+    OSIntExit();
 }
 __irq void I2S_IRQHandler(void)
 {
+    OSIntEnter();
+
 #ifdef HW_I2S_SUPPORT
      BSP_I2SIntISR();
 #endif
+
+    OSIntExit();
 }
 __irq void EXTI16_31_IRQnHandler(void)
 {
-//	gpio_int_func(29);
+
 }
 __irq void DUMMY1_IRQHandler(void)
 {}

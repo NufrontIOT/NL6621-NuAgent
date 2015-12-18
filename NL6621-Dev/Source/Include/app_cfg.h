@@ -61,7 +61,8 @@
 
 #define  NST_APP_TASK_START_PRIO                (OS_TASK_TMR_PRIO + 8)   
 
-#define  LWIP_TASK_START_PRIO                   (OS_TASK_TMR_PRIO + 9)      
+#define  LWIP_TASK_START_PRIO                   (OS_TASK_TMR_PRIO + 9) 
+     
 #define  LWIP_TASK_END_PRIO                     (OS_TASK_TMR_PRIO + 18)  
 
 

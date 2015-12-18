@@ -51,7 +51,6 @@
 #include "ring_buffer.h"
 #include "str_lib.h"
 
-#include "gpio_int.h"
 #include "simu_uart.h"
 
 #include "wifi_conn.h"
@@ -59,12 +58,15 @@
 
 #include "agent_core.h"
 #include "network_adapter.h"
-#include "nl6621_drv.h"
-#include "nl6621_uart.h"
-#include "nl6621_ota.h"
+#include "nuagent_drv.h"
+#include "nuagent_uart.h"
+#include "nuagent_ota.h"
 
 #include "cloud.h"
 #include "lan.h"
+
+
+#include "nl6621_conf.h"
 
 
 
@@ -75,8 +77,8 @@
 
 #define GAGENT_FEATURE_OTA 					(0)
 
-#define USER_GPIO_IDX_LED   				(9)		/* System led indicator. 4:for develop board, 9:for NF-210S */
-#define USER_GPIO_DIRECTCONFIG              (10)    /* start DirectConfig mode. 3:for develop board, 10:for NF-210S */
+#define USER_GPIO_IDX_LED   				GPIO_Pin_9	       /* System led indicator. 4:for develop board, 9:for NF-210S */
+#define USER_GPIO_DIRECTCONFIG              GPIO_Pin_10        /* start DirectConfig mode. 3:for develop board, 10:for NF-210S */
 #define USER_GPIO_RESET_BUTTON				USER_GPIO_DIRECTCONFIG	/* System reset gpio */
 
 #define SETBIT(x, y) (x |= (1 << y))		/* set bit y to 1 on x */

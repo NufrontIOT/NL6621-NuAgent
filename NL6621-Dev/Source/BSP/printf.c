@@ -1,85 +1,61 @@
 /*
-******************************************************************************
-**
-** Project     : 
-** Description :    Driver for Printing debug info
-** Author      :    pchn                             
-** Date        : 
-**    
-** UpdatedBy   : 
-** UpdatedDate : 
-**
-******************************************************************************
-*/
+ * ====================================================================
+ *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
+ *     All rights reserved.
+ *
+ *       Filename:  printf.c
+ *
+ *    Description:  Serial port to achieve printf interface
+ *
+ *        Version:  0.0.1
+ *        Created:  2015/11/26 11:47:43
+ *       Revision:  none
+ *
+ *         Author:  Hui Lou (Link), louis_zhl@foxmail.com
+ *   Organization:  Nufront
+ *
+ *--------------------------------------------------------------------------------------          
+ *       ChangLog:
+ *        version    Author      Date        Purpose
+ *        0.0.1      Hui Lou    2015/11/26    Create and initialize
+ *
+ * ====================================================================
+ */
+#include <stdio.h>
+#include "nl6621_usart.h"
 
-/* Includes ------------------------------------------------------------------*/
 
-#include "includes.h"
+///////////////////////////////////////////////////////////////////
+//加入以下代码,支持printf函数,而不需要选择use MicroLIB	  
+#if 1
 
-#include "uart.h"
+#pragma import(__use_no_semihosting)             
+//标准库需要的支持函数                 
+struct __FILE 
+{ 
+	int handle; 
+}; 
 
-#pragma import(__use_no_semihosting)
-struct __FILE { int handle;   /* Add whatever you need here */};
-FILE __stdout;
-FILE __stdin;
-
-
-/*
-** Retargeted I/O
-** ==============
-** The following C library functions make use of semihosting
-** to read or write characters to the debugger console: fputc(),
-** fgetc(), and _ttywrch().  They must be retargeted to write to
-** the model's UART.  __backspace() must also be retargeted
-** with this layer to enable scanf().  See the Compiler and
-** Libraries Guide.
-*/
-
-/*
-** These must be defined to avoid linking in stdio.o from the
-** C Library
-*/
+FILE __stdout;       
+//定义_sys_exit()以避免使用半主机模式    
+_sys_exit(int x) 
+{ 
+	x = x; 
+} 
+//重定义fputc函数 
 int fputc(int ch, FILE *f)
-{
+{ 	
+ 
+    /*Data should only be written to the THR when the THR Empty (THRE) bit (LSR[5]) is set.*/
+    /* Loop until the end of transmission */
+   	while (USART_GetFlagStatus(USART_FLAG_TC) == RESET);
 
-    if(ch == '\n')
-    {
-        BSP_UartPutcPolled('\r');
-    }
-    BSP_UartPutcPolled(ch);
-
-    return ch;
+    NST_WR_UART_REG((ch & (uint16_t)0x01FF), THR_OFFSET);
+	    
+	return ch;
 }
 
-void _ttywrch(int ch)
-{
-    unsigned char tempch = ch;
-    BSP_UartPutcPolled(tempch);
-}
-
-
-/* END of Retargeted I/O */
-
-/*
-** Exception Signaling and Handling
-** ================================
-** The C library implementations of ferror() uses semihosting directly
-** and must therefore be retargeted.  This is a minimal reimplementation.
-** _sys_exit() is called after the user's main() function has exited.  The C library
-** implementation uses semihosting to report to the debugger that the application has
-** finished executing.
-*/
-
-int ferror(FILE *f)
-{
-    return EOF;
-}
-
-void _sys_exit(int return_code)
-{
-    while(1);
-}
-
+#endif
 
 /*
 ******************************************************************************
