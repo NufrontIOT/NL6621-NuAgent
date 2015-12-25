@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_gpio.c
+ *       Filename:  gpio.c
  *
  *    Description:  This file provides all the GPIO firmware functions.
  *
@@ -21,7 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_gpio.h"
+#include "gpio.h"
 
 
 void GPIO_Init(GPIO_InitTypeDef* GPIO_InitStruct)
@@ -54,41 +54,6 @@ void GPIO_StructInit(GPIO_InitTypeDef* GPIO_InitStruct)
     GPIO_InitStruct->GPIO_Pin  = GPIO_Pin_All;
     GPIO_InitStruct->GPIO_Mode = GPIO_Mode_In;
 }
-
-void  BSP_GPIOSetDir(uint32_t GPIO_Pin, unsigned char dir)
-{
-    int reg_val;
-	
-    if(dir)
-    {
-        reg_val = NST_RD_GPIO_REG(SWPORTA_DDR);
-        reg_val |= GPIO_Pin;
-    }
-    else
-    {
-        reg_val = NST_RD_GPIO_REG(SWPORTA_DDR);
-        reg_val &= ~GPIO_Pin; 
-    }
-    NST_WR_GPIO_REG(SWPORTA_DDR, reg_val); 
-}
-
-void  BSP_GPIOSetValue(uint32_t GPIO_Pin, unsigned char bitValue)
-{
-     int reg_val;
-	
-    if(bitValue)
-    {
-        reg_val = NST_RD_GPIO_REG(SWPORTA_DR);
-        reg_val |= GPIO_Pin;
-    }
-    else
-    {
-        reg_val = NST_RD_GPIO_REG(SWPORTA_DR);
-        reg_val &= ~GPIO_Pin; 
-    }
-    NST_WR_GPIO_REG(SWPORTA_DR, reg_val); 
-}
-
 
 void GPIO_SetBits(uint32_t GPIO_Pin)
 {
@@ -142,6 +107,40 @@ uint32_t GPIO_ReadInputData(void)
     return reg_val;
 }
 
+void  BSP_GPIOSetDir(uint32_t GPIO_Pin, unsigned char dir)
+{
+    int reg_val;
+	
+    if(dir)
+    {
+        reg_val = NST_RD_GPIO_REG(SWPORTA_DDR);
+        reg_val |= GPIO_Pin;
+    }
+    else
+    {
+        reg_val = NST_RD_GPIO_REG(SWPORTA_DDR);
+        reg_val &= ~GPIO_Pin; 
+    }
+    NST_WR_GPIO_REG(SWPORTA_DDR, reg_val); 
+}
+
+void  BSP_GPIOSetValue(uint32_t GPIO_Pin, unsigned char bitValue)
+{
+     int reg_val;
+	
+    if(bitValue)
+    {
+        reg_val = NST_RD_GPIO_REG(SWPORTA_DR);
+        reg_val |= GPIO_Pin;
+    }
+    else
+    {
+        reg_val = NST_RD_GPIO_REG(SWPORTA_DR);
+        reg_val &= ~GPIO_Pin; 
+    }
+    NST_WR_GPIO_REG(SWPORTA_DR, reg_val); 
+}
+
 void GPIO_EXTILineConfig(uint32_t GPIO_Pin, FunctionalState Cmd)
 {
     int reg_val;
@@ -152,9 +151,9 @@ void GPIO_EXTILineConfig(uint32_t GPIO_Pin, FunctionalState Cmd)
      //Mask or unmask interrupt
     reg_val = NST_RD_GPIO_REG(G_INT_MASK);
     if(Cmd){
-        reg_val |= GPIO_Pin;
+	   reg_val &= ~(GPIO_Pin);    
     } else {
-        reg_val &= ~(GPIO_Pin); 
+	   reg_val |= GPIO_Pin;
     }
     NST_WR_GPIO_REG(G_INT_MASK, reg_val);  
 }

@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_i2c.c
+ *       Filename:  i2c.c
  *
  *    Description:  This file provides all the I2C firmware functions.
  *
@@ -21,7 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_i2c.h"	
+#include "i2c.h"	
 #include "includes.h"
 
 

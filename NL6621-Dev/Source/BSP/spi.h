@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_spi.h
+ *       Filename:  spi.h
  *
  *    Description:  This file contains all the functions prototypes for the SPI 
  *                  firmware library.
@@ -23,15 +23,15 @@
  * ====================================================================
  */
 
-#ifndef NL6621_SPI_H
-#define NL6621_SPI_H
+#ifndef SPI_H
+#define SPI_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 
@@ -213,8 +213,6 @@ typedef struct
 * Parameter:    SPI_InitStruct: pointer to a SPI_InitTypeDef structure that
 *               contains the configuration information for the specified SPI peripheral.
 *
-* @Param1[IN]:	SPI_InitStruct
-*
 * Return:       None
 * 
 * Note:         None
@@ -228,8 +226,6 @@ void SPI_Init(SPI_InitTypeDef* SPI_InitStruct);
 * Parameter:    NewState: new state of the SPI1 peripheral. 
 *               This parameter can be: ENABLE or DISABLE.
 *
-* @Param1[IN]:	NewState
-*
 * Return:       None
 * 
 * Note:         None
@@ -242,8 +238,6 @@ void SPI_Cmd(FunctionalState NewState);
 * Description:  Checks whether the specified SPI flag is set or not.
 *
 * Parameter:    SPI_FLAG: specifies the SPI1 flag to check. 
-*
-* @Param1[IN]:	SPI_FLAG
 *
 * Return:       The new state of SPI_FLAG (SET or RESET).
 * 
@@ -271,8 +265,6 @@ uint16_t SPI_ReceiveData(void);
 *
 * Parameter:    Data : Data to be transmitted.
 *
-* @Param1[IN]:	Data
-*
 * Return:       None
 * 
 * Note:         None
@@ -286,8 +278,6 @@ void SPI_SendData(uint16_t Data);
 *
 * Parameter:    None
 *
-* @Param1[IN]:	None
-*
 * Return:       The value of the received FIFO Level.
 * 
 * Note:         None
@@ -299,8 +289,6 @@ uint16_t SPI_GetRxFIFOLevel(void);
 * Description:  Transmit FIFO Level. Contains the number of valid data entries in the transmit FIFO.
 *
 * Parameter:    None
-*
-* @Param1[IN]:	None
 *
 * Return:       The value of the received FIFO Level.
 * 
@@ -314,8 +302,6 @@ uint16_t SPI_GetTxFIFOLevel(void);
 *
 * Parameter:    tx:Controls the level of entries (or below) at which the transmit FIFO controller triggers an interrupt. 
 *
-* @Param1[IN]:	tx
-*
 * Return:       None
 * 
 * Note:         None
@@ -327,8 +313,6 @@ void SPI_SetTxFIFOLevel(uint16_t tx);
 * Description:  Set Transmit FIFO Level. 
 *
 * Parameter:    rx:Controls the level of entries (or above) at which the receive FIFO controller triggers an interrupt. 
-*
-* @Param1[IN]:	rx
 *
 * Return:       None
 * 
@@ -347,8 +331,6 @@ void SPI_SetRxFIFOLevel(uint16_t rx);
 *               @arg RXUICR_FLAG: Clear Receive FIFO Underflow Interrupt. 
 *               @arg MSTICR_FLAG: Clear Receive FIFO Underflow Interrupt. 
 *               @arg ICR_FLAG: Clear Receive FIFO All Interrupt. 
-*
-* @Param1[IN]:	SPI_IT
 *
 * Return:       None
 * 
@@ -371,11 +353,6 @@ void SPI_Clear_Interrupt(uint8_t SPI_IT);
 *
 *               NewState: new state of the TIM interrupts.
 *
-* @Param1[IN]:	SPI_IT
-*
-*											   
-* @Param2[IN]:	NewState
-*
 * Return:       None
 * 
 * Note:         None
@@ -397,8 +374,6 @@ void SPI_ITConfig(uint16_t SPI_IT, FunctionalState NewState);
 *
 *               NewState: new state of the TIM interrupts.
 *
-* @Param1[IN]:	SPI_FLAG
-*
 * Return:       The new state of SPI_FLAG (SET or RESET).
 * 
 * Note:         None
@@ -416,10 +391,6 @@ FlagStatus SPI_GetITFlagStatus(uint16_t SPI_FLAG);
 *               @arg DMACR_RDMAE:  Receive DMA Enable. 
 *
 *               length: Transmit or Receive Data Level
-*
-* @Param1[IN]:	DMA_TYPE
-*
-* @Param2[IN]:	Length
 *
 * Return:       None
 * 

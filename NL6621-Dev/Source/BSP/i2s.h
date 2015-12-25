@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_dma.h
+ *       Filename:  i2s.h
  *
  *    Description:  This file contains all the functions prototypes for the i2s 
  *                  firmware library.
@@ -23,16 +23,16 @@
  * ====================================================================
  */
 
-#ifndef NL6621_I2S_H
-#define NL6621_I2S_H
+#ifndef I2S_H
+#define I2S_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
-#include "nl6621_bspdemo.h"
+#include "bsp_conf.h"
+#include "bspdemo.h"
 
 
 
@@ -396,5 +396,5 @@ void I2S_TX_Test(void);
 }
 #endif
 
-#endif /* NL6621_TIMER_H */
+#endif /* I2S_H */
 

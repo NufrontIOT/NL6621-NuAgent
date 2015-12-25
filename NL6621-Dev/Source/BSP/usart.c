@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_usart.c
+ *       Filename:  usart.c
  *
  *    Description:  This file provides all the USART firmware functions.
  *
@@ -21,10 +21,9 @@
  *
  * ====================================================================
  */
-#include "nl6621_usart.h"
-#include <stdio.h>
-#include "ucos_ii.h"
-#include "os_dmem.h"
+#include "usart.h"
+
+
 
 
 void USART_Init(USART_InitTypeDef* USART_InitStruct)

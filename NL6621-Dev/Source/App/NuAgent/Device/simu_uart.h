@@ -23,7 +23,7 @@
 #ifndef __SIMU_UART_H__
 #define __SIMU_UART_H__
 
-#include "nl6621_gpio.h"
+#include "gpio.h"
 
 
 #if 1

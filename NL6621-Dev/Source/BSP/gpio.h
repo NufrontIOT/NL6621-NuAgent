@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  nl6621_gpio.h
+ *       Filename:  gpio.h
  *
  *    Description:  This file contains all the functions prototypes for the GPIO 
  *                  firmware library.
@@ -21,8 +21,8 @@
  * =====================================================================================
  */
 							
-#ifndef NL6621_GPIO_H
-#define NL6621_GPIO_H
+#ifndef GPIO_H
+#define GPIO_H
 
 
 #ifdef __cplusplus
@@ -30,7 +30,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 #define NST_WR_GPIO_REG(Offset, Value)  /*0x40040000*/\
@@ -195,7 +195,7 @@ void GPIO_StructInit(GPIO_InitTypeDef* GPIO_InitStruct);
 */
 uint8_t GPIO_ReadInputDataBit(uint32_t GPIO_Pin);
 /*
-* Name:         GPIO_StructInit
+* Name:         GPIO_ReadInputData
 * Description:  Reads the specified GPIO input data port.
 * 
 * Parameter:    None 
@@ -230,19 +230,6 @@ void GPIO_SetBits(uint32_t GPIO_Pin);
 * Note:         None
 */
 void GPIO_ResetBits(uint32_t GPIO_Pin);
-/*
-* Name:         GPIO_SetBits
-* Description:  Selects the GPIO pin used as EXTI Line.
-* 
-* Parameter:    GPIO_Pin : specifies the port bits to be written.
-*                                This parameter can be any combination of GPIO_Pin_x where x can be (3..12 and 17...31). 
-*               Cmd            : This parameter can be: IRQ_ENABLE or IRQ_DISABLE.
-*
-* Return:       None
-* 
-* Note:         None
-*/
-void GPIO_EXTILineConfig(uint32_t GPIO_Pin, FunctionalState Cmd);
 
 /*
 * Name:         BSP_GPIOSetDir
@@ -275,12 +262,26 @@ void  BSP_GPIOSetDir(uint32_t GPIO_Pin, unsigned char dir);
 */
 void  BSP_GPIOSetValue(uint32_t GPIO_Pin, unsigned char bitValue);
 
+/*
+* Name:         GPIO_SetBits
+* Description:  Selects the GPIO pin used as EXTI Line.
+* 
+* Parameter:    GPIO_Pin : specifies the port bits to be written.
+*                                This parameter can be any combination of GPIO_Pin_x where x can be (3..12 and 17...31). 
+*               Cmd            : This parameter can be: IRQ_ENABLE or IRQ_DISABLE.
+*
+* Return:       None
+* 
+* Note:         None
+*/
+void GPIO_EXTILineConfig(uint32_t GPIO_Pin, FunctionalState Cmd);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* NL6621_GPIO_H */
+#endif /* GPIO_H */
 
 
 

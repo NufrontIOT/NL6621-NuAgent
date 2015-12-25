@@ -97,7 +97,7 @@
 
 
 /* ¶ÑÄÚ´æ¶¨Òå*/
-#define OS_DMEM_POOL_SIZE                           1024*50    /*     Determine the size of dynamic memory pool     */
+#define OS_DMEM_POOL_SIZE                           1024*20    /*     Determine the size of dynamic memory pool     */
 
 /*
 ********************************************************************************************************* 

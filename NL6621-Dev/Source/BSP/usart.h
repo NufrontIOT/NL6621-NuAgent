@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  nl6621_usart.h
+ *       Filename:  usart.h
  *
  *    Description:  This file contains all the functions prototypes for the USART 
  *                  firmware library.
@@ -21,8 +21,8 @@
  * =====================================================================================
  */
 							
-#ifndef NL6621_USART_H
-#define NL6621_USART_H
+#ifndef USART_H
+#define USART_H
 
 
 #ifdef __cplusplus
@@ -30,7 +30,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 //RX DATA:0x0000
 #define RBR_OFFSET                               0x00000000
@@ -338,16 +338,12 @@ typedef struct
 
 
 
-
-
 /*
 * Name:         USART_Init
 * Description:  Initializes the USARTx peripheral according to the specified parameters in the USART_InitStruct .
 * 
 * Parameter:    USART_InitStruct: pointer to a USART_InitTypeDef structure that contains the configuration 
 *               information for the specified USART peripheral.	 
-*
-* @Param1[IN]:	USART_InitStruct
 *
 * Return:       None
 * 
@@ -362,8 +358,6 @@ void USART_Init(USART_InitTypeDef* USART_InitStruct);
 * Parameter:    ART_InitStruct: pointer to a USART_InitTypeDef structure
 *               which will be initialized.
 *
-* @Param1[IN]:	USART_InitStruct
-*
 * Return:       None
 * 
 * Note:         None
@@ -376,8 +370,6 @@ void USART_StructInit(USART_InitTypeDef* USART_InitStruct);
 * 
 * Parameter:    NewState: new state of the USARTx peripheral.
 *               This parameter can be: ENABLE or DISABLE.
-*
-* @Param1[IN]:	NewState
 *
 * Return:       None
 * 
@@ -398,10 +390,6 @@ void USART_Cmd(FunctionalState NewState);
 *                    @arg IER_ERBFI_MASK:  Received Data Available Interrupt and Character Timeout Interrupt
 *				NewState: new state of the specified USART1 interrupts.
 *
-* @Param1[IN]:	USART_IT
-*
-* @Param2[IN]:	NewState
-*
 * Return:       None
 * 
 * Note:         None
@@ -414,22 +402,17 @@ void USART_ITConfig(uint16_t USART_IT, FunctionalState NewState);
 * 
 * Parameter:    Data: the data to transmit.	 
 *
-* @Param1[IN]:	Data
-*
 * Return:       None
 * 
 * Note:         None
 */
 void USART_SendData(uint16_t Data);
 
-#define BSP_UartPutcPolled(x)  USART_SendData(x)
 /*
 * Name:         USART_ReceiveData
 * Description:  Returns the most recent received data by the USART1 peripheral.
 * 
 * Parameter:    None	 
-*
-* @Param1[IN]:	None
 *
 * Return:       None.
 * 
@@ -452,8 +435,6 @@ uint16_t USART_ReceiveData(void);
 *     @arg USART_FLAG_FE:   Framing Error flag
 *     @arg USART_FLAG_PE:   Parity Error flag
 *
-* @Param1[IN]:	USART_FLAG
-*
 * Return:       None.
 * 
 * Note:         None
@@ -465,8 +446,6 @@ FlagStatus USART_GetFlagStatus(uint16_t USART_FLAG);
 * Description:  Clears the USARTx's pending flags.
 * 
 * Parameter:    None 
-*
-* @Param1[IN]:	None
 *
 * Return:       None
 * 
@@ -487,15 +466,12 @@ uint32_t USART_ClearFlag(void);
 *     @arg UART_IIR_BUSY: busy detect
 *     @arg UART_IIR_CTI:  character timeout
 *
-* @Param1[IN]:	USART_FLAG
-*
 * Return:       None.
 * 
 * Note:         None
 */
 ITStatus USART_GetITStatus(uint16_t USART_IT);
 
-//void USART_ClearITPendingBit(uint16_t USART_IT);
 
 
 
@@ -504,7 +480,7 @@ ITStatus USART_GetITStatus(uint16_t USART_IT);
 }
 #endif
 
-#endif /* NL6621_USART_H */
+#endif /* USART_H */
 
 
 

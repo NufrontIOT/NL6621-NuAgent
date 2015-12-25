@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_dma.c
+ *       Filename:  i2s.c
  *
  *    Description:  This file provides all the I2S firmware functions.
  *
@@ -21,7 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_i2s.h"
+#include "i2s.h"
 #include "includes.h"
 #include "ring_buffer.h"
 
@@ -68,6 +68,10 @@ int ptr = 0;
 //I2S 采样位数24bit 采样频率48KHZ、飞利浦格式 接收数据变量定义 
 ring_buffer_t i2srxbuf;	 //i2s rx test fifo。
 volatile unsigned char rx32_flag = 0;
+
+//I2S PWM
+static int regdat = 0;
+static int stat = 0;
 
 //I2S 采样位数24bit 采样频率48KHZ、飞利浦规定的格式.
 void I2S_RX_Test(void)
@@ -283,11 +287,8 @@ void BSP_I2SDeinit(void)
 void BSP_I2SWrite(void * buf,  unsigned int len)
 {
     unsigned int * cur = buf;		
-    //int regdat = 0;
     int idx = 0;
     unsigned int temp = 0;
-	static int regdat = 0;
-	static int stat = 0;
 	
     while(1)
     {

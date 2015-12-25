@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  nl6621_nvic.h
+ *       Filename:  nvic.h
  *
  *    Description:  This file contains all the functions prototypes for the NVIC 
  *                  firmware library.
@@ -20,8 +20,8 @@
  *
  * =====================================================================================
  */
-#ifndef NL6621_NVIC_H
-#define NL6621_NVIC_H
+#ifndef NVIC_H
+#define NVIC_H
 
 #include "types_def.h"
 

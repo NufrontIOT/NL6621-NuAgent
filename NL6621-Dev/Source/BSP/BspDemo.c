@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_BspDemo.c
+ *       Filename:  BspDemo.c
  *
  *    Description:  NL6621 BSP Demo(gpio,exti,usart,spi,wdg,spi,timer,i2c,dma,i2s,sdio)
  *
@@ -21,9 +21,10 @@
  *
  * ====================================================================
  */
-#include "nl6621_bspdemo.h"
+#include "bspdemo.h"
 #include "includes.h"
 #include "nuagent_uart.h"
+#include "nvic.h"
 
 extern 	void Timerx_Init(TIM_TypeDef TIMx, uint32_t timerus);
 
@@ -50,6 +51,7 @@ void NL6621_BSP_TEST(void)
 #ifdef  GPIO_EXTI_Demo
     printf("NL6621-NuAgent GPIO Interrupt Test......\r\n");
 	GPIO_Interrupt_Demo();
+	while(1);
 #endif 
 
 
@@ -66,17 +68,19 @@ void NL6621_BSP_TEST(void)
 #endif
 
 /**********************************************************************************************************
-*   1.定时器初始化，如果使用模拟串口的话，定时器0,1都被使用了，定时器1用于串口发送，定时器0用于串口接收。
+*   1.定时器初始化，如果使用模拟串口的话(REAL_UART_USED宏定义被取消的话，定时器0,1都被模拟串口使用)，
+*     定时器0,1都被使用了，定时器1用于串口发送，定时器0用于串口接收。
 *	2.如果用到SPI传输数据，使能SPI_SDIO_CMD_TEST的话，定时器1已经使用。
 *   3.定时器中断范围（ 1us~107374182us(107s) ）。
-*   4.定时器0 TMR0_IRQFunc(void)中断函数，__irq void TMR0_IRQHandler(void)处理。
-*   5.定时器1 TMR1_IRQFunc(void)中断函数，__irq void TMR0_IRQHandler(void)处理。   
+*   4.定时器0 __irq void TMR0_IRQHandler(void)处理。
+*   5.定时器1 __irq void TMR0_IRQHandler(void)处理。   
 ***********************************************************************************************************/
 #ifdef TIMER_Demo
     #if 0
     printf("NL6621-NuAgent Timer Test......\r\n");
     Timerx_Init(TIMER1,1000);	 //1ms中断
     Timerx_Init(TIMER0,1000000); //1s中断
+	while(1);
 	#endif
 #endif 
 
@@ -156,7 +160,7 @@ void NL6621_BSP_TEST(void)
     printf("NL6621-NuAgent I2S RX Test......\r\n");
 	I2S_RX_Test();
 	#endif
-
+	while(1);
 #endif //HW_I2S_SUPPORT
 
 /**********************************************************************************************************
@@ -204,7 +208,17 @@ void NL6621_BSP_TEST(void)
 		 GPIO_Init(&GPIO_InitStructure);	
 		 gpio_level = GPIO_ReadInputDataBit(GPIO_Pin_3);//读取状态
 		 
-		 gpio_level = gpio_level; //禁止警告					
+		 gpio_level = gpio_level; //禁止警告
+		 
+		 while(1)
+		 {
+		     gpio_level = GPIO_ReadInputDataBit(GPIO_Pin_3);//读取状态
+			 printf("GPIO_PIN_3:%d\n",gpio_level);
+			 GPIO_SetBits(GPIO_Pin_5);						//输出高电平
+		   	 NSTusecDelay(1000000);
+		     GPIO_ResetBits(GPIO_Pin_5);				    //输出低电平
+			 NSTusecDelay(1000000);	
+		 }					
 	}
 	//
 	/* NL6621  GPIO Demo */
@@ -224,27 +238,43 @@ void NL6621_BSP_TEST(void)
 	{
 	    GPIO_InitTypeDef GPIO_InitStructure;
 	 	EXTI_InitTypeDef EXTI_InitStructure;
+		NVIC_InitTypeDef NVIC_InitStructure;
+
 	
-	    /* 初始化GPIO10,GPIO21 输入 */
-	  	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_10 | GPIO_Pin_21;
+	    /* 初始化GPIO5,GPIO7 输入 */
+	  	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_5 | GPIO_Pin_7;
 	  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_In;
 	  	GPIO_Init(&GPIO_InitStructure);
 	
-	    GPIO_EXTILineConfig(GPIO_Pin_10,IRQ_ENABLE);
-	    /* 初始化GPIO10低电平触发 */
-	   	EXTI_InitStructure.EXTI_Line = EXTI_Line10;
-	  	EXTI_InitStructure.EXTI_Mode = EXTI_LEVEL_SENSITIVE;	
+	    GPIO_EXTILineConfig(GPIO_Pin_5,IRQ_ENABLE);
+	    /* 初始化GPIO5低电平触发 */
+	   	EXTI_InitStructure.EXTI_Line = EXTI_Line5;
+	  	EXTI_InitStructure.EXTI_Mode = EXTI_EDGE_SENSITIVE;	
 	  	EXTI_InitStructure.EXTI_Trigger = EXTI_ACTIVE_LOW;
 	  	EXTI_InitStructure.EXTI_LineCmd = IRQ_ENABLE;
 	  	EXTI_Init(&EXTI_InitStructure);	 
-	
-	    GPIO_EXTILineConfig(GPIO_Pin_21,IRQ_ENABLE);
-	    /* 初始化GPIO21上升沿触发 */
-	  	EXTI_InitStructure.EXTI_Line = EXTI_Line21;
+
+	    GPIO_EXTILineConfig(GPIO_Pin_7,IRQ_ENABLE);
+	    /* 初始化GPIO7上升沿触发 */
+	  	EXTI_InitStructure.EXTI_Line = EXTI_Line7;
 	  	EXTI_InitStructure.EXTI_Mode = EXTI_EDGE_SENSITIVE;	
 	  	EXTI_InitStructure.EXTI_Trigger = EXTI_ACTIVE_HIGH;
 	  	EXTI_InitStructure.EXTI_LineCmd = IRQ_ENABLE;
 	  	EXTI_Init(&EXTI_InitStructure);	  	
+
+	    /* Configure GPIO5 interrupt */
+	    NVIC_InitStructure.NVIC_IRQChannel = EXTI5_IRQn;
+	    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = GPIO_IRQn_PRIO+3;
+	    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	    NVIC_InitStructure.NVIC_IRQChannelCmd = IRQ_ENABLE;
+	    NVIC_Init(&NVIC_InitStructure);
+
+		/* Configure GPIO7 interrupt */
+	    NVIC_InitStructure.NVIC_IRQChannel = EXTI7_IRQn;
+	    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = GPIO_IRQn_PRIO+2;
+	    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	    NVIC_InitStructure.NVIC_IRQChannelCmd = IRQ_ENABLE;
+	    NVIC_Init(&NVIC_InitStructure);
 	}
 	
 	//GPIO中断，EXTI0_IRQHandler ~	 EXTI15_IRQHandler   and   EXTI16_31_IRQnHandler处理
@@ -376,9 +406,6 @@ void BSP_UartISR_Demo(void)
 //NL6621 定时器Demo
 /*******************************************************/
 #ifdef TIMER_Demo
-    extern void SimuUartOutPut(void);
-    extern int simu_uart_timer_task(void);
-
 	//
 	/* NL6621 TIMER DEMO */
 	//	
@@ -394,31 +421,7 @@ void BSP_UartISR_Demo(void)
 		TIM_ITConfig(TIMx, IRQ_ENABLE);
 	
 		TIM_Cmd(TIMx, IRQ_ENABLE);  							 
-	}
-	
-	//定时器0中断函数，__irq void TMR0_IRQHandler(void)处理。
-	void TMR0_IRQFunc(void)   
-	{
-		if (TIM_GetITStatus(TIMER0) != RESET)
-	    {
-			TIM_ClearITPendingBit(TIMER0); 
-			//ADD UERS CODE...
-			//...
-			simu_uart_timer_task();  
-		}
-	}
-	
-	//定时器1中断函数，__irq void TMR1_IRQHandler(void)处理
-	void TMR1_IRQFunc(void)   
-	{
-		if (TIM_GetITStatus(TIMER1) != RESET)  
-		{
-			TIM_ClearITPendingBit(TIMER1); 
-			//ADD UERS CODE...
-			//... 
-			SimuUartOutPut();//模拟串口发送数据
-		}
-	}
+	}	
 	
 	/* NL6621 TIMER DEMO */
 	//
@@ -434,7 +437,7 @@ void BSP_UartISR_Demo(void)
 	#define WatchTimeout_200ms  7
 	#define WatchTimeout_400ms  8
 	//
-	/* NL6621  USART 中断 Demo */
+	/* NL6621 看门狗 Demo */
 	//
 	void IWDG_Init_Demo(void) 
 	{	

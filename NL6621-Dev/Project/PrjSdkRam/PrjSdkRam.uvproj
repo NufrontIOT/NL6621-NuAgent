@@ -386,14 +386,14 @@
           <GroupName>BSP</GroupName>
           <Files>
             <File>
-              <FileName>nl6621_BspDemo.c</FileName>
+              <FileName>BspDemo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_BspDemo.c</FilePath>
+              <FilePath>..\..\Source\BSP\BspDemo.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_BspDemo.h</FileName>
+              <FileName>BspDemo.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_BspDemo.h</FilePath>
+              <FilePath>..\..\Source\BSP\BspDemo.h</FilePath>
             </File>
             <File>
               <FileName>bsp.c</FileName>
@@ -401,59 +401,59 @@
               <FilePath>..\..\Source\BSP\bsp.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_gpio.c</FileName>
+              <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_gpio.c</FilePath>
+              <FilePath>..\..\Source\BSP\gpio.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_exti.c</FileName>
+              <FileName>exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_exti.c</FilePath>
+              <FilePath>..\..\Source\BSP\exti.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_usart.c</FileName>
+              <FileName>usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_usart.c</FilePath>
+              <FilePath>..\..\Source\BSP\usart.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_timer.c</FileName>
+              <FileName>timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_timer.c</FilePath>
+              <FilePath>..\..\Source\BSP\timer.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_wdg.c</FileName>
+              <FileName>wdg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_wdg.c</FilePath>
+              <FilePath>..\..\Source\BSP\wdg.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_qspi.c</FileName>
+              <FileName>qspi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_qspi.c</FilePath>
+              <FilePath>..\..\Source\BSP\qspi.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_spi.c</FileName>
+              <FileName>spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_spi.c</FilePath>
+              <FilePath>..\..\Source\BSP\spi.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_i2c.c</FileName>
+              <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_i2c.c</FilePath>
+              <FilePath>..\..\Source\BSP\i2c.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_i2s.c</FileName>
+              <FileName>i2s.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_i2s.c</FilePath>
+              <FilePath>..\..\Source\BSP\i2s.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_sdio.c</FileName>
+              <FileName>sdio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_sdio.c</FilePath>
+              <FilePath>..\..\Source\BSP\sdio.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_dma.c</FileName>
+              <FileName>dma.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_dma.c</FilePath>
+              <FilePath>..\..\Source\BSP\dma.c</FilePath>
             </File>
             <File>
               <FileName>printf.c</FileName>
@@ -466,9 +466,9 @@
               <FilePath>..\..\Source\BSP\mpu.c</FilePath>
             </File>
             <File>
-              <FileName>nl6621_nvic.c</FileName>
+              <FileName>nvic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Source\BSP\nl6621_nvic.c</FilePath>
+              <FilePath>..\..\Source\BSP\nvic.c</FilePath>
             </File>
             <File>
               <FileName>cortexM3_it.c</FileName>
@@ -921,6 +921,11 @@
               <FilePath>..\..\Source\App\NuAgent\System\nuagent_uart.c</FilePath>
             </File>
             <File>
+              <FileName>simu_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Device\simu_uart.c</FilePath>
+            </File>
+            <File>
               <FileName>ntp_client.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\Lib\ntp_client.c</FilePath>
@@ -931,39 +936,9 @@
               <FilePath>..\..\Source\App\NuAgent\System\nuagent_drv.c</FilePath>
             </File>
             <File>
-              <FileName>ring_buffer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Lib\ring_buffer.c</FilePath>
-            </File>
-            <File>
-              <FileName>str_lib.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Lib\str_lib.c</FilePath>
-            </File>
-            <File>
-              <FileName>simu_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Device\simu_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>TestMain.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Sample\TestMain.c</FilePath>
-            </File>
-            <File>
-              <FileName>cJSON.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Lib\cJSON.c</FilePath>
-            </File>
-            <File>
               <FileName>log.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\User\log.c</FilePath>
-            </File>
-            <File>
-              <FileName>simu_iic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Source\App\NuAgent\Device\simu_iic.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -979,6 +954,36 @@
               <FileName>lan.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\User\lan.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Extlib</GroupName>
+          <Files>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Lib\ring_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>TestMain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Sample\TestMain.c</FilePath>
+            </File>
+            <File>
+              <FileName>cJSON.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Lib\cJSON.c</FilePath>
+            </File>
+            <File>
+              <FileName>str_lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Lib\str_lib.c</FilePath>
+            </File>
+            <File>
+              <FileName>simu_iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\App\NuAgent\Lib\simu_iic.c</FilePath>
             </File>
           </Files>
         </Group>

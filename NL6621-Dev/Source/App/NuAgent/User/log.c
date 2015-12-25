@@ -26,8 +26,7 @@
 #include "ring_buffer.h"
 
 
-
-#if NUAGENT_UART_SWITCH
+#if(!defined REAL_UART_USED)  
 
 extern void SimuSendOneByte(unsigned char ch);
 
@@ -162,9 +161,8 @@ void print(char* fmt, ...)
 	*Tmr1Load = SIMU_UART_Baudrate;
 	*Tmr1Ctl = (~TMR_INT_MASK) |TMR_ENA | TMR_USER_DEFINE_MODE;
 }
-#endif
 
-
+#endif	//#if(!defined REAL_UART_USED)
 
 void dump_hex(unsigned char *str, unsigned int len)
 {

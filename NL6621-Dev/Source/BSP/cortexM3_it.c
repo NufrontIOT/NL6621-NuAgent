@@ -14,6 +14,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "includes.h"
+#include "log.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -23,6 +24,8 @@
 
 extern void BSP_LowMacIntISR(void);
 extern void Simu_UartIRQ_Func(void);
+extern void SimuUartOutPut(void);
+extern int  simu_uart_timer_task(void);
 
 /*******************************************************************************
 * Function Name  : NMIException
@@ -283,6 +286,16 @@ __irq void EXTI4_IRQHandler(void)
 *******************************************************************************/
 __irq void EXTI5_IRQHandler(void)
 {
+   #ifdef GPIO_EXTI_Demo
+   OSIntEnter();
+   NVIC_DisableIRQ(EXTI5_IRQn); 
+   NVIC_ClearIRQChannelPendingBit(EXTI5_IRQn);
+
+   BSP_GPIOIntISR_Demo(EXTI_Line5);
+
+   NVIC_EnableIRQ(EXTI5_IRQn); 
+   OSIntExit();
+   #endif
 }
 
 /*******************************************************************************
@@ -295,9 +308,12 @@ __irq void EXTI5_IRQHandler(void)
 __irq void EXTI6_IRQHandler(void)
 {
     OSIntEnter();
+    //NVIC_DisableIRQ(EXTI6_IRQn); 
+    NVIC_ClearIRQChannelPendingBit(EXTI6_IRQn);
 
 	Simu_UartIRQ_Func();
 
+    //NVIC_EnableIRQ(EXTI6_IRQn); 
 	OSIntExit();
 }
 /*******************************************************************************
@@ -309,6 +325,18 @@ __irq void EXTI6_IRQHandler(void)
 *******************************************************************************/
 __irq void EXTI7_IRQHandler(void)
 {
+   #ifdef GPIO_EXTI_Demo
+
+   OSIntEnter();
+   NVIC_DisableIRQ(EXTI7_IRQn); 
+   NVIC_ClearIRQChannelPendingBit(EXTI7_IRQn);
+
+   BSP_GPIOIntISR_Demo(EXTI_Line7);
+
+   NVIC_EnableIRQ(EXTI7_IRQn); 
+   OSIntExit();
+
+   #endif
 }
 /*******************************************************************************
 * Function Name  : TMR1_IRQHandler
@@ -322,8 +350,13 @@ __irq void TMR1_IRQHandler(void)
     OSIntEnter();
     NVIC_DisableIRQ(TMR1_IRQn); 
     NVIC_ClearIRQChannelPendingBit(TMR1_IRQn);
-		    
-	TMR1_IRQFunc();
+
+	TIM_ClearITPendingBit(TIMER1); 
+	//ADD UERS CODE...
+	//... 
+	#if(!defined REAL_UART_USED)
+	SimuUartOutPut();//模拟串口发送数据
+	#endif //#if(!defined REAL_UART_USED)	    
 
     NVIC_EnableIRQ(TMR1_IRQn); 
     OSIntExit();
@@ -342,7 +375,12 @@ __irq void TMR0_IRQHandler(void)
     NVIC_DisableIRQ(TMR0_IRQn); 
     NVIC_ClearIRQChannelPendingBit(TMR0_IRQn);
 
-    TMR0_IRQFunc();
+	TIM_ClearITPendingBit(TIMER0); 
+	//ADD UERS CODE...
+	//...
+	#if(!defined REAL_UART_USED) 
+	simu_uart_timer_task(); 
+	#endif //#if(!defined REAL_UART_USED)
 
     NVIC_EnableIRQ(TMR0_IRQn); 
     OSIntExit();
@@ -382,7 +420,7 @@ __irq void WWDG0_IRQHandler(void)
     NVIC_DisableIRQ(WWDG0_IRQn);     
     NVIC_ClearIRQChannelPendingBit(WWDG0_IRQn);
 
-// clear  interrupt
+    // clear interrupt
     RegEoi = *Wdt0Eoi;
     RegEoi = RegEoi;
 

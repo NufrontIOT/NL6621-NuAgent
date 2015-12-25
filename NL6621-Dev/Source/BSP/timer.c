@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_spi.c
+ *       Filename:  timer.c
  *
  *    Description:  This file provides all the TIMER firmware functions.
  *
@@ -21,7 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_timer.h"
+#include "timer.h"
 
 extern UINT32 CpuClkFreq;
 extern UINT32 ApbClkFreq;

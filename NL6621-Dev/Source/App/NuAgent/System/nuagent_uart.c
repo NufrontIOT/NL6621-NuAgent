@@ -51,7 +51,7 @@ int uart_data_send(unsigned char *data, unsigned short len, unsigned char uart_t
 	for (i = 0; i < len; i++) {
 		NSTusecDelay(5);
 		if (uart_type == 1)
-			BSP_UartPutcPolled(*(unsigned char *)(data + i));
+			USART_SendData(*(unsigned char *)(data + i));
 		else 
 			SimuSendOneByte(*(unsigned char *)(data + i));
 	}

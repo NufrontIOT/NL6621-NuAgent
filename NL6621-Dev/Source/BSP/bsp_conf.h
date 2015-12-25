@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  nl6621_conf.h
+ *       Filename:  bsp_conf.h
  *
  *    Description:  Library configuration file.
  *
@@ -20,29 +20,28 @@
  * =====================================================================================
  */
 							
-#ifndef NL6621_CONF_H
-#define NL6621_CONF_H
+#ifndef BSP_CONF_H
+#define BSP_CONF_H
 
 
 
 /* Includes ------------------------------------------------------------------*/
 /* Uncomment/Comment the line below to enable/disable peripheral header file inclusion */
 #include <stdint.h>
-#include "os_cfg.h"
 
-#include "nl6621_nvic.h"
-#include "nl6621_gpio.h"
-#include "nl6621_exti.h"
-#include "nl6621_usart.h"
-#include "nl6621_wdg.h"
-#include "nl6621_timer.h"
-#include "nl6621_i2c.h"
-#include "nl6621_spi.h"
-#include "nl6621_qspi.h"
-#include "nl6621_dma.h"
-#include "nl6621_i2s.h"
-#include "nl6621_sdio.h"
 
+#include "nvic.h"
+#include "gpio.h"
+#include "exti.h"
+#include "usart.h"
+#include "wdg.h"
+#include "timer.h"
+#include "i2c.h"
+#include "spi.h"
+#include "qspi.h"
+#include "dma.h"
+#include "i2s.h"
+#include "sdio.h"
 
 
 
@@ -55,7 +54,6 @@
 
 /* Exported macro ------------------------------------------------------------*/
 #ifdef  USE_FULL_ASSERT
-
 /**
   * @brief  The assert_param macro is used for function's parameters check.
   * @param  expr: If expr is false, it calls assert_failed function which reports 
@@ -72,13 +70,17 @@
 
 
 
+
 #include "types_def.h"
 #include "app_cfg.h"
 #include "board.h"
 #include "reg.h"
+#include "os_cfg.h"
 
 
-#endif /* NL6621_GPIO_H */
+
+
+#endif /* BSP_CONF_H */
 
 
 

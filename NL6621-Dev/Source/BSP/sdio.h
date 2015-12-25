@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_sdio.h
+ *       Filename:  sdio.h
  *
  *    Description:  This file contains all the functions prototypes for the SDIO 
  *                  firmware library.
@@ -23,15 +23,15 @@
  * ====================================================================
  */
 
-#ifndef NL6621_SDIO_H
-#define NL6621_SDIO_H
+#ifndef SDIO_H
+#define SDIO_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 // SDIO interrupts
 #define  TRANS_DONE_INT           (0x1U << 0) // transfer complete
@@ -748,5 +748,5 @@ void BSP_HostIntISR(void);
 }
 #endif
 
-#endif /* NL6621_TIMER_H */
+#endif /* SDIO_H */
 

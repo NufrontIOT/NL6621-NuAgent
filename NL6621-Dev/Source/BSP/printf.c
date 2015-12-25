@@ -22,7 +22,7 @@
  * ====================================================================
  */
 #include <stdio.h>
-#include "nl6621_usart.h"
+#include "usart.h"
 
 
 ///////////////////////////////////////////////////////////////////
@@ -45,7 +45,14 @@ _sys_exit(int x)
 //重定义fputc函数 
 int fputc(int ch, FILE *f)
 { 	
- 
+    if(ch == '\n')
+    {
+	    /*Data should only be written to the THR when the THR Empty (THRE) bit (LSR[5]) is set.*/
+	    /* Loop until the end of transmission */
+	   	while (USART_GetFlagStatus(USART_FLAG_TC) == RESET);
+	
+	    NST_WR_UART_REG(('\r' & (uint16_t)0x01FF), THR_OFFSET);
+    }   
     /*Data should only be written to the THR when the THR Empty (THRE) bit (LSR[5]) is set.*/
     /* Loop until the end of transmission */
    	while (USART_GetFlagStatus(USART_FLAG_TC) == RESET);

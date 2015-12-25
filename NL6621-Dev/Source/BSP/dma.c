@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_dma.c
+ *       Filename:  dma.c
  *
  *    Description:  This file provides all the DMA firmware functions.
  *
@@ -21,8 +21,9 @@
  *
  * ====================================================================
  */
-#include "nl6621_dma.h"
-#include "ucos_ii.h"
+#include "dma.h"
+#include <stdio.h>
+
 
 
 typedef OS_EVENT    NST_LOCK;

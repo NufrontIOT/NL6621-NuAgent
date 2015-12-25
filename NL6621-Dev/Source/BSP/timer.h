@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_timer.h
+ *       Filename:  timer.h
  *
  *    Description:  This file contains all the functions prototypes for the TIMER 
  *                  firmware library.
@@ -23,15 +23,15 @@
  * ====================================================================
  */
 
-#ifndef NL6621_TIMER_H
-#define NL6621_TIMER_H
+#ifndef TIMER_H
+#define TIMER_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 /* SysTick Registers */
@@ -94,9 +94,6 @@ typedef enum
 *               NewState: new state of the TIMx peripheral.
 *               This parameter can be: IRQ_ENABLE or IRQ_DISABLE.
 *
-* @Param1[IN]:	TIMx
-* @Param2[IN]:	NewState
-*
 * Return:       None
 * 
 * Note:         None
@@ -108,8 +105,6 @@ void TIM_Cmd(TIM_TypeDef TIMx, FunctionalState NewState);
 * Description:  Clears the TIMx's interrupt pending bits.
 *               
 * Parameter:    TIMx: where x can be 0 to 1 to select the TIMx peripheral.
-*
-* @Param1[IN]:	TIMx
 *
 * Return:       None
 * 
@@ -125,9 +120,6 @@ void TIM_ClearITPendingBit(TIM_TypeDef TIMx);
 *               NewState: new state of the TIMx peripheral.
 *               This parameter can be: IRQ_ENABLE or IRQ_DISABLE.
 *
-* @Param1[IN]:	TIMx
-* @Param2[IN]:	NewState
-*
 * Return:       None
 * 
 * Note:         None
@@ -139,8 +131,6 @@ void TIM_ITConfig(TIM_TypeDef TIMx, FunctionalState NewState);
 * Description:  Enables or disables the specified TIM interrupts.
 *               
 * Parameter:    TIMx: where x can be 0 to 1 to select the TIMx peripheral.
-*
-* @Param1[IN]:	TIMx
 *
 * Return:       None
 * 
@@ -156,10 +146,6 @@ ITStatus TIM_GetITStatus(TIM_TypeDef TIMx);
 *               TIM_TimeBaseInitStruct: pointer to a TIM_TimeBaseInitTypeDef
 *               structure that contains the configuration information for the specified TIM peripheral.
 *
-* @Param1[IN]:	TIMx
-*
-* @Param1[IN]:	TIM_TimeBaseInitStruct
-*
 * Return:       None
 * 
 * Note:         None
@@ -172,5 +158,5 @@ void TIM_TimeBaseInit(TIM_TypeDef TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseIni
 }
 #endif
 
-#endif /* NL6621_TIMER_H */
+#endif /* TIMER_H */
 

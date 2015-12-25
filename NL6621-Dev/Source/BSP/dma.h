@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_dma.h
+ *       Filename:  dma.h
  *
  *    Description:  This file contains all the functions prototypes for the DMA 
  *                  firmware library.
@@ -23,23 +23,24 @@
  * ====================================================================
  */
 
-#ifndef NL6621_DMA_H
-#define NL6621_DMA_H
+#ifndef DMA_H
+#define DMA_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
+#include "ucos_ii.h"
 
 
-#ifdef DMA_MOVE_MEM
-	extern OS_EVENT *pDmaSem;
-	extern PUINT8 pDmaSrc;
-	extern PUINT8 pDmaDst;
-	extern UINT16 DmaSize;
-#endif // DMA_MOVE_MEM //
+
+extern OS_EVENT *pDmaSem;
+extern PUINT8 pDmaSrc;
+extern PUINT8 pDmaDst;
+extern UINT16 DmaSize;
+
 
 
 /*
@@ -54,19 +55,19 @@
 */
 void BSP_DmaInit (uint8_t channel_num);
 
-#ifdef DMA_MOVE_MEM
-	/*
-	* Name:         BSP_DmaMoveMemInit
-	* Description:  DMA initialization,Memory to Memory.
-	*
-	* Parameter:    channel_num: Select channel(0~3).
-	*
-	* Return:       None
-	* 
-	* Note:         None
-	*/
-	void BSP_DmaMoveMemInit (uint8_t channel_num);
-#endif // DMA_MOVE_MEM //
+
+/*
+* Name:         BSP_DmaMoveMemInit
+* Description:  DMA initialization,Memory to Memory.
+*
+* Parameter:    channel_num: Select channel(0~3).
+*
+* Return:       None
+* 
+* Note:         None
+*/
+void BSP_DmaMoveMemInit (uint8_t channel_num);
+
 
 /*
 * Name:         BSP_DmaStart
@@ -123,5 +124,5 @@ void BSP_DmaIntISR(void);
 }
 #endif
 
-#endif /* NL6621_TIMER_H */
+#endif /* DMA_H */
 

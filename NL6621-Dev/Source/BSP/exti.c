@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_exti.c
+ *       Filename:  exti.c
  *
  *    Description:  This file provides all the EXTI firmware functions.
  *
@@ -21,7 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_exti.h"
+#include "exti.h"
 
 
 
@@ -43,24 +43,24 @@ void EXTI_Init(EXTI_InitTypeDef* EXTI_InitStruct)
     assert_param(IS_EXTI_LINE(EXTI_InitStruct->EXTI_Line));  
     assert_param(IS_FUNCTIONAL_STATE(EXTI_InitStruct->EXTI_LineCmd));
 
-    //set int type level
-    reg_val = NST_RD_GPIO_REG(G_INT_TYPE_LEVEL);
-    if(EXTI_InitStruct->EXTI_Trigger) {
-        reg_val |= EXTI_InitStruct->EXTI_Trigger;
-    } else {
-        reg_val &= ~(EXTI_InitStruct->EXTI_Trigger); 
-    }
-    NST_WR_GPIO_REG(G_INT_TYPE_LEVEL, reg_val);
-	 
     //set int polarity
-    reg_val = NST_RD_GPIO_REG(G_INT_POLARITY);	 
+    reg_val = NST_RD_GPIO_REG(G_INT_TYPE_LEVEL);	 
     if(EXTI_InitStruct->EXTI_Mode){
-        reg_val |= EXTI_InitStruct->EXTI_Mode;
+        reg_val |= 	EXTI_InitStruct->EXTI_Line;
     }
     else{
-	    reg_val &= ~(EXTI_InitStruct->EXTI_Mode); 
+	    reg_val &= ~(EXTI_InitStruct->EXTI_Line); 
     }
-    NST_WR_GPIO_REG(G_INT_POLARITY, reg_val); 
+    NST_WR_GPIO_REG(G_INT_TYPE_LEVEL, reg_val); 
+
+    //set int type level
+    reg_val = NST_RD_GPIO_REG(G_INT_POLARITY);
+    if(EXTI_InitStruct->EXTI_Trigger) {
+        reg_val |= EXTI_InitStruct->EXTI_Line;
+    } else {
+        reg_val &= ~(EXTI_InitStruct->EXTI_Line); 
+    }
+    NST_WR_GPIO_REG(G_INT_POLARITY, reg_val);
 	 
     //enable interrupt
     reg_val = NST_RD_GPIO_REG(G_INT_ENA);

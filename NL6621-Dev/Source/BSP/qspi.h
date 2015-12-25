@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_qspi.h
+ *       Filename:  qspi.h
  *
  *    Description:  This file contains all the functions prototypes for the QSPI 
  *                  firmware library.
@@ -23,15 +23,15 @@
  * ====================================================================
  */
 
-#ifndef NL6621_QSPI_H
-#define NL6621_QSPI_H
+#ifndef QSPI_H
+#define QSPI_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 
@@ -383,24 +383,6 @@ void QSPI_ITConfig(uint16_t QSPI_IT, FunctionalState NewState);
 */
 FlagStatus QSPI_GetITFlagStatus(uint16_t QSPI_FLAG);
 
-
-/*
-* Name:         QSPI_DMA_Cmd
-* Description:  Enables or disables the specified QSPI DMA and Set DMA RX/TX FIFO.
-*
-* Parameter:    DMA_TYPE: DMA RX  and  DMA TX
-*               This parameter can be any combination of the following values:
-*               @arg DMACR_TDMAE:  Transmit DMA Enable.
-*               @arg DMACR_RDMAE:  Receive DMA Enable. 
-*
-*               length: Transmit or Receive Data Level
-*
-* Return:       None
-* 
-* Note:         None
-*/
-void QSPI_DMA_Cmd(uint16_t DMA_TYPE,uint16_t Length);
-
 /*
 * Name:         BSP_QSpiWriteByte
 * Description:  Transmits a Data through the QSPI1 peripheral.
@@ -443,5 +425,5 @@ void BSP_QSpiWait(void);
 }
 #endif
 
-#endif /* NL6621_SPI_H */
+#endif /* QSPI_H */
 

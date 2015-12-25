@@ -112,13 +112,14 @@ void simu_uart_rx_init(void) {
 
     GPIO_InitTypeDef GPIO_InitStructure;
  	EXTI_InitTypeDef EXTI_InitStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
 
     /* 初始化SIMU_UART_RX_PIN输入 */
   	GPIO_InitStructure.GPIO_Pin  = SIMU_UART_RX_PIN;
   	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_In;
   	GPIO_Init(&GPIO_InitStructure);
 
-    GPIO_EXTILineConfig(GPIO_Pin_22,IRQ_ENABLE);
+    GPIO_EXTILineConfig(SIMU_UART_RX_PIN,IRQ_ENABLE);
     /* 初始化SIMU_UART_RX_PIN下降沿触发 */
    	EXTI_InitStructure.EXTI_Line = SIMU_UART_RX_PIN;
   	EXTI_InitStructure.EXTI_Mode = EXTI_EDGE_SENSITIVE;	
@@ -126,7 +127,13 @@ void simu_uart_rx_init(void) {
   	EXTI_InitStructure.EXTI_LineCmd = IRQ_ENABLE;
   	EXTI_Init(&EXTI_InitStructure);	 
 
-	EXTI_GPIO_Cmd(SIMU_UART_RX_PIN,IRQ_ENABLE);
+	
+	/* Configure GPIO6 interrupt */
+    NVIC_InitStructure.NVIC_IRQChannel = EXTI_GetIRQ(SIMU_UART_RX_PIN);
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = GPIO_IRQn_PRIO;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = IRQ_ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
 }
 
 int simu_uart_timer_task(void)

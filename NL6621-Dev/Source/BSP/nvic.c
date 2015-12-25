@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_nvic.c
+ *       Filename:  nvic.c
  *
  *    Description:  This file provides all the NVIC firmware functions.
  *
@@ -18,11 +18,10 @@
  *       ChangLog:
  *        version    Author      Date        Purpose
  *        0.0.1      Hui Lou    2015/11/25    Create and initialize
- *        0.0.2      Hui Lou    2015/11/25    Modify webserver framework to fix serialnet
  *
  * ====================================================================
  */
-#include "nl6621_nvic.h"
+#include "nvic.h"
 
 /*******************************************************************************
 * Function Name  : NVIC_StructInit

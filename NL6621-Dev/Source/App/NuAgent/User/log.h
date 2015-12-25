@@ -115,9 +115,6 @@
     #define log_debug(fmt, arg...)
 #endif
 
-#define NUAGENT_UART_SWITCH   		(1)
-
-#if NUAGENT_UART_SWITCH
 void    print(char* fmt, ...);
 void    printch(char ch);
 void    printdec(int dec);
@@ -125,8 +122,6 @@ void    printflt(double flt);
 void    printbin(int bin);
 void    printhex(int hex);
 void    printstr(char* str); 
-#endif
-
 
 #endif	 /* REAL_UART_USED end */
 

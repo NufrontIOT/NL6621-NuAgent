@@ -18,5 +18,6 @@
 #include    "param.h"
 #include    "lwip.h"
 
-#include    "nl6621_bspdemo.h"
+#include    "bspdemo.h"
+#include    "dma.h"
 #endif /*INCLUDES_H_*/

@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_wat.c
+ *       Filename:  wdg.c
  *
  *    Description:  This file provides all the WATCH firmware functions.
  *
@@ -21,7 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_wdg.h"
+#include "wdg.h"
 
 
 

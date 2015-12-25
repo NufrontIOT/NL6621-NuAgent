@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  nl6621_exti.h
+ *       Filename:  exti.h
  *
  *    Description:  This file contains all the functions prototypes for the EXTI 
  *                  firmware library.
@@ -21,8 +21,8 @@
  * =====================================================================================
  */
 							
-#ifndef NL6621_EXTI_H
-#define NL6621_EXTI_H
+#ifndef EXTI_H
+#define EXTI_H
 
 
 #ifdef __cplusplus
@@ -30,7 +30,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 /** 
@@ -104,7 +104,7 @@ typedef struct
 //#define EXTI_Line13      ((uint32_t)0x00002000)  /*!< External interrupt line 13 */
 //#define EXTI_Line14      ((uint32_t)0x00004000)  /*!< External interrupt line 14 */
 //#define EXTI_Line15      ((uint32_t)0x00008000)  /*!< External interrupt line 15 */
-#define EXTI_Line16      ((uint32_t)0x00010000)  /*!< External interrupt line 16 */
+//#define EXTI_Line16      ((uint32_t)0x00010000)  /*!< External interrupt line 16 */
 #define EXTI_Line17      ((uint32_t)0x00020000)  /*!< External interrupt line 17 */
 #define EXTI_Line18      ((uint32_t)0x00040000)  /*!< External interrupt line 18 */
 #define EXTI_Line19      ((uint32_t)0x00080000)  /*!< External interrupt line 19 */
@@ -239,7 +239,7 @@ void EXTI_GPIO_Cmd(uint32_t EXTI_Line, FunctionalState NewState);
 }
 #endif
 
-#endif /* NL6621_GPIO_H */
+#endif /* EXIT_H */
 
 
 

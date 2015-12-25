@@ -66,7 +66,7 @@
 #include "lan.h"
 
 
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 

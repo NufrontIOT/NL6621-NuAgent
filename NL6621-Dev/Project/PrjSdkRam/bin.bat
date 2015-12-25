@@ -7,7 +7,7 @@ cd OUTPUT
 GenBootBins.exe SdkFw.bin
 del GenBootBins.exe
 
-set Softver=V010101
+set Softver=V020000
 set Time_h=%TIME:~0,2%
 if /i %Time_h% LSS 10 (set Time_h=0%TIME:~1,1%)
 set DTM=%DATE:~2,2%%DATE:~5,2%%DATE:~8,2%%Time_h%

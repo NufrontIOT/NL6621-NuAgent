@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_spi.c
+ *       Filename:  spi.c
  *
  *    Description:  This file provides all the SPI firmware functions.
  *
@@ -21,8 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_spi.h"
-#include "includes.h"
+#include "spi.h"
 
 
 

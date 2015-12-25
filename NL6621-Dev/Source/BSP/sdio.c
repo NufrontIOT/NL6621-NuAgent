@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_sdio.c
+ *       Filename:  sdio.c
  *
  *    Description:  This file provides all the SDIO firmware functions.
  *
@@ -21,7 +21,7 @@
  *
  * ====================================================================
  */
-#include "nl6621_sdio.h"
+#include "sdio.h"
 #include "includes.h"
 
 SDIO_REG    SdioReg;

@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_wat.h
+ *       Filename:  wdg.h
  *
  *    Description:  This file contains all the functions prototypes for the WATCH 
  *                  firmware library.
@@ -23,15 +23,15 @@
  * ====================================================================
  */
 
-#ifndef NL6621_WDG_H
-#define NL6621_WDG_H
+#ifndef WDG_H
+#define WDG_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 
@@ -41,8 +41,6 @@
 * Description:  Enables or disables write access to Wdt0Torr registers.
 *   
 * Parameter:    None 
-*
-* @Param1[IN]:	None
 *
 * Return:       None
 * 
@@ -57,8 +55,6 @@ void IWDG_WriteAccessCmd(void);
 *   
 * Parameter:    Reload: specifies the IWDG Reload value.
 *
-* @Param1[IN]:	Reload:(Range of values  6~8)
-*
 * Return:       None
 * 
 * Note:         None
@@ -71,8 +67,6 @@ void IWDG_SetReload(uint8_t Reload);
 *   
 * Parameter:    None 
 *
-* @Param1[IN]:	None
-*
 * Return:       None
 * 
 * Note:         None
@@ -84,8 +78,6 @@ void IWDG_ReloadCounter(void);
 * Description:  Enables IWDG (write access to IWDG_PR and IWDG_RLR registers disabled).
 * 
 * Parameter:    None 
-*
-* @Param1[IN]:	None
 *
 * Return:       None
 * 

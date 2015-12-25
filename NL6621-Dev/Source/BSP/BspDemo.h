@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_BspDemo.h
+ *       Filename:  BspDemo.h
  *
  *    Description:  NL6621 BSP Demo(gpio,exti,usart,spi,wdg,spi,timer,i2c,dma,i2s,sdio)                 
  *
@@ -22,15 +22,15 @@
  * ====================================================================
  */
 
-#ifndef NL6621_BSPDEMO_H
-#define NL6621_BSPDEMO_H
+#ifndef BSPDEMO_H
+#define BSPDEMO_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 
@@ -199,5 +199,5 @@ void NL6621_BSP_TEST(void);
 }
 #endif
 
-#endif /* NL6621_TIMER_H */
+#endif /* BSPDEMO_H */
 

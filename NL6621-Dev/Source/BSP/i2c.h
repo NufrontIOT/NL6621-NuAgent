@@ -3,7 +3,7 @@
  *     Copyright: (c) 2015 GuangDong  Nufront SOC Chip Co., Ltd.
  *     All rights reserved.
  *
- *       Filename:  nl6621_i2c.h
+ *       Filename:  i2c.h
  *
  *    Description:  This file contains all the functions prototypes for the I2C 
  *                  firmware library.
@@ -23,15 +23,15 @@
  * ====================================================================
  */
 
-#ifndef NL6621_I2C_H
-#define NL6621_I2C_H
+#ifndef I2C_H
+#define I2C_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "nl6621_conf.h"
+#include "bsp_conf.h"
 
 
 /*EEPROM start base address*/
@@ -338,7 +338,7 @@ void I2C_Cmd(FunctionalState NewState);
 * 
 * Note:         None
 */
-void I2C_DMA_Cmd(uint16_t DMA_TYPE,uint16_t Length);
+void I2C_DMACmd(uint16_t DMA_TYPE,uint16_t Length);
 
 /*
 * Name:         I2C_WaitForBus
@@ -437,38 +437,11 @@ BOOL_T BSP_I2CSeqRead(uint32_t Adr, uint8_t *pBuf, uint32_t Len);
 */
 BOOL_T BSP_I2CSeqWrite(uint32_t Adr, uint8_t *pBuf, uint32_t Len);
 
-/*
-* Name:         BSP_I2CByteWrite
-* Description:  Write device for each address data.
-*
-* Parameter:    Adr: Write data Address.
-*
-*               pByte: Write data.
-*
-* Return:       BOOL_T (NST_TRUE or NST_FALSE).
-* 
-* Note:         None
-*/
-void   BSP_I2CByteWrite(UINT32 Adr, uint8_t* pByte);
-
-/*
-* Name:         BSP_I2CByteRead
-* Description:  Read device for each address data.
-*
-* Parameter:    Adr: Read data Address.
-*
-*               pByte: Read data.
-*
-* Return:       None
-* 
-* Note:         None
-*/
-void   BSP_I2CByteRead(uint32_t Adr, UINT8* pByte);
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* NL6621_TIMER_H */
+#endif /* I2C_H */
 
