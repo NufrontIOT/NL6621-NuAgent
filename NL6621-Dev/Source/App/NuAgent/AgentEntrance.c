@@ -62,6 +62,10 @@ void nl6621_main_entry(void * pParam)
 	/* initialize GAgent resource */
     Agent_Init();
 
+#ifdef FAT_FS_SUPPORT
+	Fatfs_Init();
+#endif
+
 #if 1
 	/* Create network task thread. Include UDP server, UDP Broadcast, TCP server, TCP
 	 * login cloud. */

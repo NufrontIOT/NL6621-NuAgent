@@ -345,7 +345,7 @@
               <MiscControls>--littleend --loose_implicit_cast</MiscControls>
               <Define>USE_CORTEX_M3</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Source\Include;..\..\Source\Ports\Cortex-M3;..\..\Source\uCOS-II;..\..\Source\BSP;..\..\Source\WiFi\include;..\..\Source\LwIP\src\include;..\..\Source\LwIP\port\include;..\..\Source\LwIP\src\include\ipv4;..\..\Source\LwIP\src\include\ipv6;..\..\Source\LwIP\src\include\lwip;..\..\Source\LwIP\src\include\netif;..\..\Source\LwIP\port\include\netif;..\..\Source\App\NuAgent\Wifi;..\..\Source\App\NuAgent\System;..\..\Source\App\NuAgent\Lib;..\..\Source\App\NuAgent\Include;..\..\Source\App\NuAgent\Device;..\..\Source\App\NuAgent\User</IncludePath>
+              <IncludePath>..\..\Source\Include;..\..\Source\Ports\Cortex-M3;..\..\Source\uCOS-II;..\..\Source\BSP;..\..\Source\WiFi\include;..\..\Source\LwIP\src\include;..\..\Source\LwIP\port\include;..\..\Source\LwIP\src\include\ipv4;..\..\Source\LwIP\src\include\ipv6;..\..\Source\LwIP\src\include\lwip;..\..\Source\LwIP\src\include\netif;..\..\Source\LwIP\port\include\netif;..\..\Source\App\NuAgent\Wifi;..\..\Source\App\NuAgent\System;..\..\Source\App\NuAgent\Lib;..\..\Source\App\NuAgent\Include;..\..\Source\App\NuAgent\Device;..\..\Source\App\NuAgent\User;..\..\Source\Fatfs;..\..\Source\Fatfs\option;..\..\Source\Fatfs\comm</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -984,6 +984,51 @@
               <FileName>simu_iic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\App\NuAgent\Lib\simu_iic.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Fatfs</GroupName>
+          <Files>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\Fatfs\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\Fatfs\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>fatfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\Fatfs\comm\fatfs.c</FilePath>
+            </File>
+            <File>
+              <FileName>syscall.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\Fatfs\option\syscall.c</FilePath>
+            </File>
+            <File>
+              <FileName>unicode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\Fatfs\option\unicode.c</FilePath>
+            </File>
+            <File>
+              <FileName>cc936.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\Fatfs\option\cc936.c</FilePath>
+            </File>
+            <File>
+              <FileName>ffconf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Source\Fatfs\ffconf.h</FilePath>
+            </File>
+            <File>
+              <FileName>integer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Source\Fatfs\integer.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -68,7 +68,12 @@
 
 #include "bsp_conf.h"
 
-
+#ifdef FAT_FS_SUPPORT
+#include "ff.h"
+#include "integer.h"
+#include "diskio.h"
+#include "fatfs.h"
+#endif
 
 #define malloc 		OSMMalloc
 #define free 		OSMFree

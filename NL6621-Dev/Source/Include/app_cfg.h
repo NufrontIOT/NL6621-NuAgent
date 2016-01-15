@@ -43,7 +43,7 @@
 #define DEFAULT_PHY_CHNL 6
 
 //#define DOT11_N_SUPPORT
-
+//#define FAT_FS_SUPPORT//FATFS SUPPORT
 /*
 ********************************************************************************************************* 
 *                                            任务ID和优先级                                                   
