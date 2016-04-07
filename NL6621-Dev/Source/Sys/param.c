@@ -625,7 +625,7 @@ INT32 InfTxRateSet(PARAM_RATE_MODE RateMode, PARAM_RATE_IDX RateIdx)
 -------------------------------------------------------------------------*/
 INT32 InfTxPwrLevelSet(PARAM_TX_PWR_LEVEL TxPwrLevel) 
 {
-	if (TxPwrLevel > PARAM_TX_PWR_LEVEL_HIGH)
+	if (TxPwrLevel > PARAM_TX_PWR_LEVEL_10)
 		return -1;
 
 	PostTaskMsg(gpMacMngTskMsgQ, MLME_TX_PWR_LEVEL_SET_ID, (PUINT8)&TxPwrLevel, 1);
@@ -762,8 +762,6 @@ INT32  InfBeaconPeriodSet(UINT16 BcnPrd, UINT8 NotifyPeerEn)
 {
 	INT8U MsgBody[3] = {0};
 
-	if (BcnPrd < 100)
-		return -1;
 
 	NST_MOVE_MEM((INT8U *)MsgBody, (INT8U *)&BcnPrd, 2);
 	MsgBody[2] = NotifyPeerEn;
